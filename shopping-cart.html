@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <input type="checkbox" id="cart-toggle" class="cart-toggle">
+    
+    <div class="header">
+        
+        <label for="cart-toggle" class="cart-icon-container">
+            <div class="cart-icon"><img src="cart-icon.png" alt="Cart Icon"></div>
+            <div class="cart-count">0</div>
+        </label>
+    </div>
+
+    <label for="cart-toggle" class="overlay"></label>
+
+    <div class="cart-panel">
+        <div class="cart-header">
+            <h2>My Cart</h2>
+            <label for="cart-toggle" class="close-btn">&times;</label>
+        </div>
+        <div class="cart-items">
+            <div class="empty-cart">
+                <div class="empty-cart-icon"><img src="cart-icon.png" alt="Cart Icon"></div>
+                <p>Your cart is empty</p>
+            </div>
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Total:</span>
+                <span>0.00</span>
+            </div>
+            <button class="checkout-btn">Proceed to Checkout</button>
+        </div>
+    </div>
+</body>
+</html>
