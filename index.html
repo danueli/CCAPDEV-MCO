@@ -14,8 +14,36 @@
       <a href="index.html">Home</a>
       <a href="help.html">Help</a>
       <a href="login.html">Login</a>
-      <a href="#">Cart</a>
+      <input type="checkbox" id="cart-toggle" class="cart-toggle"> 
+        <label for="cart-toggle" class="cart-icon-container">
+            <div class="cart-icon"><img src="cart-icon.png" alt="Cart Icon"></div>
+            <div class="cart-count">0</div>
+        </label>
+ 
+
+    <label for="cart-toggle" class="overlay"></label>
+
+    <div class="cart-panel">
+        <div class="cart-header">
+            <h2>My Cart</h2>
+            <label for="cart-toggle" class="close-btn">&times;</label>
+        </div>
+        <div class="cart-items">
+            <div class="empty-cart">
+                <div class="empty-cart-icon"><img src="cart-icon.png" alt="Cart Icon"></div>
+                <p>Your cart is empty</p>
+            </div>
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Total:</span>
+                <span>0.00</span>
+            </div>
+            <button class="checkout-btn">Proceed to Checkout</button>
+        </div>
+    </div>
     </nav>
+    
 </header>
 
 <!-- Main Content -->
@@ -36,6 +64,8 @@
       <div class="product-card">Blueberry Muffin</div>
     </div>
   </main>
+
+ 
 
 <!-- Footer -->
   <footer class="footer">
