@@ -19,7 +19,7 @@
             <div class="cart-icon"><img src="cart-icon.png" alt="Cart Icon"></div>
             <div class="cart-count">0</div>
         </label>
- 
+        
 
     <label for="cart-toggle" class="overlay"></label>
 
@@ -58,11 +58,25 @@
     </div>
 
 <!-- Products (placeholders only) -->
-    <div class="products">
-      <div class="product-card">Chocolate Cake</div>
-      <div class="product-card">Croissant</div>
-      <div class="product-card">Blueberry Muffin</div>
+  <div class="products">
+    <div class="product-card" data-name="Chocolate Cake" data-price="12.50">
+        <h3>Chocolate Cake</h3>
+        <p class="price">₱12.50</p>
+        <button class="add-to-cart-btn">Add to Cart</button>
     </div>
+
+    <div class="product-card" data-name="Croissant" data-price="3.00">
+        <h3>Croissant</h3>
+        <p class="price">₱3.00</p>
+        <button class="add-to-cart-btn">Add to Cart</button>
+    </div>
+
+    <div class="product-card" data-name="Blueberry Muffin" data-price="4.50">
+        <h3>Blueberry Muffin</h3>
+        <p class="price">₱4.50</p>
+        <button class="add-to-cart-btn">Add to Cart</button>
+    </div>
+  </div>
   </main>
 
  
@@ -72,5 +86,6 @@
     <p>CCAPDEV S12 Team Gardenia </p>
   </footer>
 
+<script src="script.js"></script>
 </body>
 </html>
