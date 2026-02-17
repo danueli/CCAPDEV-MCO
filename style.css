@@ -388,3 +388,57 @@ a {
     background: #d9534f;
     color: white;
 }
+
+.login-card{
+    display: flex;
+    flex-direction: column;
+    background-color: #987654;
+    padding: 20px;
+    width: 600px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    color: #333;
+    margin: 50px auto;
+}
+
+.login.title{
+    text-align: center;
+    color: white;
+    font-size: 30px;
+    margin-bottom: 20px;
+}
+
+
+form{
+    color: white;
+    font-size: 18px;
+    font-style: Helvetica, sans-serif;
+    margin-bottom: 10px
+}
+
+.input-container{
+      text-align: center;
+      margin: 0 auto 15px auto;
+}
+
+input[type = "username"], input[type = "password"]{
+  height: 30px;
+  width: 300px;
+  padding: 5px;
+  margin-left: 3%;
+}
+
+.submit{
+    background-color: #969696;
+    color: white;
+    width: 20px;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+}
+
+.submit:hover {
+    background: #cc5a5a;
+}

@@ -1,3 +1,4 @@
+// Cart Function Commands
 document.addEventListener('DOMContentLoaded', () => {
     
     let cart = [];
@@ -114,3 +115,31 @@ document.addEventListener('DOMContentLoaded', () => {
         window.location.href = 'checkout.html';
     });
 });
+
+// Login Section (For Buyers)
+
+const submit = document.querySelector('.submit')
+
+submit.addEventListener("click", (e) => {
+    e.preventDefault();
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+    validateLogin(username, password);
+})
+
+function validateLogin(username, password){
+
+    // Assign temporary username and password
+    us = ["Danueli", "Danny Richard", "Zapanta"];
+    psw = ["12345", "JohnDoe", "password"];
+
+    if (us.includes(username) && psw.includes(password)){
+        alert("Login successful!");
+        window.location.href = "index.html";
+    } else {
+        alert("Invalid username or password. Please try again.");
+        document.getElementById('username').value = "";
+        document.getElementById('password').value = "";
+
+    }
+}
