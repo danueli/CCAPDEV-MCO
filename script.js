@@ -114,6 +114,22 @@ document.addEventListener('DOMContentLoaded', () => {
         // 2. Redirect to the checkout page
         window.location.href = 'checkout.html';
     });
+
+    // Search Button
+    const searchInput = document.querySelector(".search-input");
+    const searchBtn = document.querySelector(".search-btn");
+    const productCards = document.querySelectorAll(".product-card");
+
+    function doSearch() {
+        const query = searchInput.value.toLowerCase();
+
+        productCards.forEach(card => {
+            const name = card.dataset.name.toLowerCase();
+            card.style.display = name.includes(query) ? "block" : "none";
+            });
+        }
+    searchBtn.addEventListener("click", doSearch);
+
 });
 
 // Login Section (For Buyers)
