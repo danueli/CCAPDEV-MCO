@@ -371,8 +371,6 @@ a {
 }
 
 
-
-
 .remove-btn {
     background: transparent;
     color: #d9534f;       
@@ -441,4 +439,17 @@ input[type = "username"], input[type = "password"]{
 
 .submit:hover {
     background: #cc5a5a;
+}
+
+.c_signup{
+    color: white;
+    text-align: center;
+    font-size: 14px;
+    margin-top: 15px;
+    display: block;
+}
+
+.c_signup:hover {
+    color: blue;
+    text-decoration: underline;
 }

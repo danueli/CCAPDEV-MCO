@@ -137,10 +137,14 @@ document.addEventListener('DOMContentLoaded', () => {
 const submit = document.querySelector('.submit')
 
 submit.addEventListener("click", (e) => {
-    e.preventDefault();
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
-    validateLogin(username, password);
+    try {
+        e.preventDefault();
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+        validateLogin(username, password);
+    } catch (error) {
+        console.error("Error during login:", error);
+    }
 })
 
 function validateLogin(username, password){
