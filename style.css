@@ -419,8 +419,10 @@ form{
       margin: 0 auto 15px auto;
 }
 
-input[type = "username"], input[type = "password"], input[type = "shop"], input[type = "s_password"], input[type = "s_username"],
-input[type = "c_username"], input[type = "c_password"]{
+input[type="text"],
+input[type = "username"],
+input[type="password"],
+input[type="email"] {
   height: 30px;
   width: 300px;
   padding: 5px;
