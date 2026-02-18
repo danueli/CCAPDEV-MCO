@@ -371,8 +371,6 @@ a {
 }
 
 
-
-
 .remove-btn {
     background: transparent;
     color: #d9534f;       
@@ -413,7 +411,7 @@ form{
     color: white;
     font-size: 18px;
     font-style: Helvetica, sans-serif;
-    margin-bottom: 10px
+    margin-bottom: 10px;
 }
 
 .input-container{
@@ -421,25 +419,27 @@ form{
       margin: 0 auto 15px auto;
 }
 
-input[type = "username"], input[type = "password"]{
+input[type = "username"], input[type = "password"], input[type = "shop"], input[type = "s_password"], input[type = "s_username"],
+input[type = "c_username"], input[type = "c_password"]{
   height: 30px;
   width: 300px;
   padding: 5px;
-  margin-left: 3%;
+  margin-left: 2%;
 }
 
-.submit{
+.submit, .ss, .cs{
     background-color: #969696;
     color: white;
-    width: 20px;
+    width: 10px;
     border: none;
-    padding: 10px 20px;
+    padding: 10px 5px;
     border-radius: 4px;
     cursor: pointer;
     width: 100%;
 }
 
-.submit:hover {
+
+.submit:hover, .ss:hover, .cs:hover {
     background: #cc5a5a;
 }
 
@@ -499,3 +499,22 @@ input[type = "username"], input[type = "password"]{
 .scroll-btn.right {
     right: 5%;
 }
+.signup-options {
+    display: flex;
+    margin-left: 150px;
+    margin-top: 10px;
+    gap: 30px;
+}
+
+.c_signup, .s_login{
+    color: white;
+    font-size: 15px;
+    margin-top: 15px;
+    display: block;
+}
+
+.c_signup:hover, .s_login:hover{
+    color: blue;
+    text-decoration: underline;
+}
+

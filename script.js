@@ -132,16 +132,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
 });
 
-// Login Section (For Buyers)
+// Login Section (Valid user/Buyer accounts)
 
 
 const submit = document.querySelector('.submit')
 
 submit.addEventListener("click", (e) => {
-    e.preventDefault();
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
-    validateLogin(username, password);
+    try {
+        e.preventDefault();
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+        validateLogin(username, password);
+    } catch (error) {
+        console.error("Error during login:", error);
+    }
 })
 
 function validateLogin(username, password){
@@ -161,3 +165,65 @@ function validateLogin(username, password){
     }
 }
 
+// Signup section for sellers
+
+const addseller = document.querySelector('.ss')
+
+addseller.addEventListener("click", (e) => {
+    try {
+        e.preventDefault();
+        const shopname = document.getElementById('shop').value;
+        const username = document.getElementById('s_username').value;
+        const password = document.getElementById('s_password').value;
+        addSeller(shopname,username, password);
+    } catch (error) {
+        console.error("Error during signup:", error);
+    }
+})
+
+function addSeller(s_name,username, password){
+
+    // Assign temporary username and password
+    us = [];
+    psw = [];
+    shop = [];
+
+    // Add new seller data to arrays
+    us.push(username);
+    psw.push(password);
+    shop.push(s_name);
+
+    alert("Seller account created successfully!");
+    window.location.href = "login.html";
+    
+}
+
+// Signup section for buyers
+
+const addcustomer = document.querySelector('.cs')
+
+addcustomer.addEventListener("click", (e) => {
+    try {
+        e.preventDefault();
+        const username = document.getElementById('c_username').value;
+        const password = document.getElementById('c_password').value;
+        addCustomer(username, password);
+    } catch (error) {
+        console.error("Error during signup:", error);
+    }
+})
+
+function addCustomer(username, password){
+
+    // Assign temporary username and password
+    us = [];
+    psw = [];
+
+    // Add new seller data to arrays
+    us.push(username);
+    psw.push(password);
+
+    alert("Customer account created successfully!");
+    window.location.href = "login.html";
+    
+}
