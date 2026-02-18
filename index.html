@@ -13,7 +13,8 @@
     <nav>
       <a href="index.html">Home</a>
       <a href="help.html">Help</a>
-      <a href="login.html">Logout</a>
+      <a href="login.html" id="logout-link">Logout</a>
+      <a href="add_product.html" id="add-product-link" style="display:none;">Add Product</a>
       
       <input type="checkbox" id="cart-toggle" class="cart-toggle"> 
         <label for="cart-toggle" class="cart-icon-container">
@@ -77,17 +78,23 @@
     </div>
 
     <div class="product-card" data-name="Pandesal" data-price="2.00">
-        <h3>Croissant</h3>
+        <h3>Pandesal</h3>
         <p class="price">₱2.00</p>
         <button class="add-to-cart-btn">Add to Cart</button>
     </div>
 
     <div class="product-card" data-name="Carrot Cake" data-price="85.00">
-        <h3>Blueberry Muffin</h3>
+        <h3>Carrot Cake</h3>
         <p class="price">₱85.00</p>
         <button class="add-to-cart-btn">Add to Cart</button>
     </div>
   </div>
+
+  <!-- Seller-added products -->
+  <div class="products" id="seller-products"></div>
+
+  <a href = "Add_Product.html"></a>
+
   </main>
 
  

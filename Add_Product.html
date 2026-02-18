@@ -10,10 +10,28 @@
             <nav>
             <a href="index.html">Home</a>
             <a href="help.html">Help</a>
-            <a href="login.html">Login</a>
-            <a href="#">Cart</a>
+            <a href="login.html">Logout</a>
+            <a href="add_product.html">Add Product</a>
     </nav>
   </header>
+   
+       <br><br>
+
+      <main class="login">
+          <div class="login-card" id="login-card">
+              <h2 class="login title">Add a New Product</h2><br>
+
+              <form id="add-product-form">
+                  <div class="input-container">
+                      <label for="product-name">Product Name:</label>
+                      <input type="text" id="product-name" name="product-name" placeholder="Input food item" required><br><br>
+
+                      <label for="product-price">Product Price(₱):</label>
+                      <input type="number" id="product-price" name="product-price" min="0.01" step="0.01" placeholder="Place price in ₱ " required><br><br>
+                  </div>
+                  <button type="submit" class="submit">Add Product</button>
+              </form>
+          </div>
 
 
    <!-- Footer -->
@@ -22,7 +40,36 @@
    </footer>
 
 
-    </body>
+    <script src="script.js"></script>
+    <script>
+        document.getElementById('add-product-form').addEventListener('submit', function(e) {
+            e.preventDefault();
 
+            const name = document.getElementById('product-name').value.trim();
+            const price = parseFloat(document.getElementById('product-price').value);
+
+            if (!name || isNaN(price) || price <= 0) {
+                alert('Please enter a valid product name and price.');
+                return;
+            }
+
+            // Load existing seller products from localStorage
+            const existing = JSON.parse(localStorage.getItem('bakehubSellerProducts') || '[]');
+
+            // Check for duplicate names
+            if (existing.some(p => p.name.toLowerCase() === name.toLowerCase())) {
+                alert('A product with that name already exists!');
+                return;
+            }
+
+            // Add new product and save
+            existing.push({ name: name, price: price });
+            localStorage.setItem('bakehubSellerProducts', JSON.stringify(existing));
+
+            alert(`"${name}" has been added successfully!`);
+            document.getElementById('add-product-form').reset();
+        });
+    </script>
+    </body>
 
 </html>

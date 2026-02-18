@@ -146,6 +146,19 @@ document.addEventListener('DOMContentLoaded', () => {
     // Render cart immediately on load to restore saved items
     if (cartItemsContainer) renderCart();
 
+    // Show seller nav link if logged in as seller
+    const session = getSession();
+    const addProductLink = document.getElementById('add-product-link');
+    if (addProductLink && session && session.role === 'seller') {
+        addProductLink.style.display = 'inline';
+    }
+
+    // Render seller-added products on index page
+    const sellerProductsContainer = document.getElementById('seller-products');
+    if (sellerProductsContainer) {
+        renderSellerProducts();
+    }
+
 });
 
 // Login Section (Valid user/Buyer accounts)
@@ -275,3 +288,6 @@ function addCustomer(username, password) {
     alert("Customer account created successfully!");
     window.location.href = "login.html";
 }
+
+// To Implement: Seller Tools for Adding/Editing Products 
+

@@ -62,7 +62,9 @@
     <img src="search.png" height="50">
     <nav class="nav-links">
         <a href="index.html">Back to Menu</a>
+        <!-- Temporary ref placements while error persists in index.html-->
         <a href="login.html">Logout</a>
+        <a href = "Add_Product.html"> Add Product</a>
     </nav>
 </header>
 
@@ -102,24 +104,49 @@
 </main>
 
 <script>
+    // Master product list — single source of truth for prices
+    const STATIC_PRODUCTS = [
+        { name: "Chocolate Cake",   price: 100.00 },
+        { name: "Croissant",        price: 40.00  },
+        { name: "Blueberry Muffin", price: 50.00  },
+        { name: "Pandesal",         price: 2.00   },
+        { name: "Carrot Cake",      price: 85.00  }
+    ];
+
+    function getMasterPrices() {
+        const map = {};
+        STATIC_PRODUCTS.forEach(p => { map[p.name] = p.price; });
+        // Merge seller-added products
+        const sellerProducts = JSON.parse(localStorage.getItem('bakehubSellerProducts') || '[]');
+        sellerProducts.forEach(p => { map[p.name] = parseFloat(p.price); });
+        return map;
+    }
+
     //load the Cart Data
     document.addEventListener('DOMContentLoaded', () => {
-        const savedCart = localStorage.getItem('bakehubCart');
+        const session = JSON.parse(localStorage.getItem('bakehubSession') || 'null');
+        const cartKey = session ? 'bakehubCart_' + session.username : 'bakehubCart_guest';
+        const savedCart = localStorage.getItem(cartKey);
         const summaryContainer = document.getElementById('summary-items');
         const totalElement = document.getElementById('summary-total');
         
         if (savedCart) {
             const cart = JSON.parse(savedCart);
+            const masterPrices = getMasterPrices();
             let total = 0;
 
             cart.forEach(item => {
-                const itemTotal = item.price * item.quantity;
+                // Always use current price from master list; fall back to saved price if not found
+                const currentPrice = masterPrices[item.name] !== undefined
+                    ? masterPrices[item.name]
+                    : item.price;
+                const itemTotal = currentPrice * item.quantity;
                 total += itemTotal;
 
                 summaryContainer.innerHTML += `
                     <div class="summary-item">
                         <span>${item.quantity}x ${item.name}</span>
-                        <span>₱${itemTotal.toFixed(2)}</span>
+                        <span>&#8369;${itemTotal.toFixed(2)}</span>
                     </div>
                 `;
             });
@@ -132,7 +159,9 @@
     document.getElementById('checkout-form').addEventListener('submit', (e) => {
         e.preventDefault();
         alert('Thank you for your order! Your pastries are on the way.');
-        localStorage.removeItem('bakehubCart'); // Clear cart
+        const session = JSON.parse(localStorage.getItem('bakehubSession') || 'null');
+        const cartKey = session ? 'bakehubCart_' + session.username : 'bakehubCart_guest';
+        localStorage.removeItem(cartKey); // Clear cart
         window.location.href = 'index.html'; // Go back home
     });
 </script>

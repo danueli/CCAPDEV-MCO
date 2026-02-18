@@ -30,7 +30,7 @@
                       <input type="password" id="s_password" name="s_password" required> <br><br>
 
                 </div>
-                <button type="button" class="ss">Login</button>
+                <button type="button" class="submit s-login-btn">Login</button>
             </form>
           </div>
     </main>
@@ -40,6 +40,15 @@
     <p>CCAPDEV S12 Team Gardenia </p>
   </footer>
     <script src="script.js"></script>
+    <script>
+        // Override submit for seller login page
+        document.querySelector('.s-login-btn').addEventListener('click', (e) => {
+            e.preventDefault();
+            const shopname = document.getElementById('shop').value.trim();
+            const password = document.getElementById('s_password').value;
+            validateLogin(shopname, password);
+        });
+    </script>
     </body>
 
     
