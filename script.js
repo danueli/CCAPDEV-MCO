@@ -134,6 +134,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Login Section (For Buyers)
 
+
 const submit = document.querySelector('.submit')
 
 submit.addEventListener("click", (e) => {
@@ -159,3 +160,4 @@ function validateLogin(username, password){
 
     }
 }
+

@@ -442,3 +442,60 @@ input[type = "username"], input[type = "password"]{
 .submit:hover {
     background: #cc5a5a;
 }
+
+
+.product-section {
+    min-height: calc(100vh - 160px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    width: 100%;
+}
+
+.product-container {
+    display: flex;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    gap: 25px;
+    padding: 20px;
+    width: 80%;
+    margin: 0 auto;
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
+    -ms-overflow-style: none;  
+    scrollbar-width: none;     
+}
+
+/* Hide scrollbar (optional) */
+.product-container::-webkit-scrollbar {
+    display: none;
+}
+
+.product-card {
+    min-width: 200px;
+    background: white;
+    border-radius: 10px;
+    text-align: center;
+    padding: 10px;
+    scroll-snap-align: start;
+}
+
+.product-card img {
+    width: 100%;
+}
+
+.scroll-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+}
+
+.scroll-btn.left {
+    left: 5%;
+}
+
+.scroll-btn.right {
+    right: 5%;
+}
