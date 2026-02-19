@@ -1,103 +1,214 @@
 <!DOCTYPE html>
 <html>
     <head>
-      <title> Bakehub | Login</title>
-      <link rel = "icon" type = "image/png" href = "bakehub_favicon.png">
-      <link rel = "stylesheet" href = "style.css">
-  </head>
-    <body>
-        <header class="navbar">
-           <image src = "search.png" height = "75">
-           </image>
-            <nav>
-            <a href="index.html">Home</a>
-            <a href="index.html">About Us</a>
-            <a href="help.html">Help</a>
-            <a href="alogin.html">Signup as Seller</a>
-            <input type="checkbox" id="cart-toggle" class="cart-toggle"> 
-            <label for="cart-toggle" class="cart-icon-container">
-            <div class="cart-icon"><img src="cart-icon.png" alt="Cart Icon"></div>
-            <div class="cart-count">0</div>
-            </label>
+      <title>Bakehub | Catalog</title>
+      <link rel="icon" type="image/png" href="bakehub_favicon.png">
+      <link rel="stylesheet" href="style.css">
+      <style>
+  
+
+        .product-container {
+          display: flex;
+          flex-direction: row;
+          flex-wrap: wrap;
+          justify-content: center;
+          gap: 20px;
+          max-width: 1200px;
+          margin: 40px auto;
+          padding: 0 30px 80px;
+        }
+
+        .product-card {
+          position: relative;
+          display: block;
+          width: 200px;
+          flex-shrink: 0;
+          border-radius: 15px;
+          overflow: hidden;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+          cursor: pointer;
+          background: transparent;
+          padding: 0;
+        }
+
+        .product-img {
+          width: 100%;
+          height: 220px;
+          object-fit: cover;
+          display: block;
+          transition: transform 0.35s ease;
+        }
+
         
+        .card-overlay {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: rgba(107, 63, 31, 0.88);
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          text-align: center;
+          padding: 20px;
+          opacity: 0;
+          transition: opacity 0.35s ease;
+        }
 
-            <label for="cart-toggle" class="overlay"></label>
+        .card-overlay h3 {
+          color: #fff;
+          font-size: 1.05rem;
+          margin: 0 0 8px;
+          font-family: Georgia, serif;
+        }
 
-            <div class="cart-panel">
-                <div class="cart-header">
-                    <h2>My Cart</h2>
-                    <label for="cart-toggle" class="close-btn">&times;</label>
-                </div>
-                <div class="cart-items">
-                    <div class="empty-cart">
-                        <div class="empty-cart-icon"><img src="cart-icon.png" alt="Cart Icon"></div>
-                        <p>Your cart is empty</p>
+        .card-overlay p {
+          color: #f7f2eb;
+          font-size: 0.85rem;
+          margin: 0 0 12px;
+          line-height: 1.4;
+        }
+
+        .card-overlay .stars {
+          color: #ffd700;
+          font-size: 1.1rem;
+        }
+
+        .product-card:hover .card-overlay {
+          opacity: 1;
+        }
+
+        .product-card:hover .product-img {
+          transform: scale(1.06);
+        }
+
+        /* Catalog page heading */
+        .catalog-heading {
+          text-align: center;
+          padding: 36px 20px 0;
+          font-family: Georgia, serif;
+          color: #6b3f1f;
+          font-size: 1.8rem;
+        }
+
+        .catalog-subheading {
+          text-align: center;
+          color: #9b7a5a;
+          font-size: 0.95rem;
+          margin-top: 6px;
+          margin-bottom: 0;
+        }
+
+        /* Responsive columns */
+        @media (max-width: 1000px) { .product-container { column-count: 3; } }
+        @media (max-width: 700px)  { .product-container { column-count: 2; } }
+        @media (max-width: 450px)  { .product-container { column-count: 1; } }
+      </style>
+    </head>
+
+    <body>
+        <!-- Header -->
+        <header class="navbar">
+            <image src="search.png" height="75"></image>
+            <nav>
+                <a href="index.html">Home</a>
+                <a href="catalog.html">Catalog</a>
+                <a href="help.html">Help</a>
+                <a href="login.html" id="logout-link">Logout</a>
+                <a href="add_product.html" id="add-product-link" style="display:none;">Add Product</a>
+                <a href="profile.html" id="profile-link">Profile</a>
+
+                <input type="checkbox" id="cart-toggle" class="cart-toggle">
+                <label for="cart-toggle" class="cart-icon-container">
+                    <div class="cart-icon"><img src="cart-icon.png" alt="Cart Icon"></div>
+                    <div class="cart-count">0</div>
+                </label>
+
+                <label for="cart-toggle" class="overlay"></label>
+
+                <div class="cart-panel">
+                    <div class="cart-header">
+                        <h2>My Cart</h2>
+                        <label for="cart-toggle" class="close-btn">&times;</label>
+                    </div>
+                    <div class="cart-items">
+                        <div class="empty-cart">
+                            <div class="empty-cart-icon"><img src="cart-icon.png" alt="Cart Icon"></div>
+                            <p>Your cart is empty</p>
+                        </div>
+                    </div>
+                    <div class="cart-footer">
+                        <div class="cart-total">
+                            <span>Total:</span>
+                            <span>0.00</span>
+                        </div>
+                        <button class="checkout-btn">Proceed to Checkout</button>
                     </div>
                 </div>
-                <div class="cart-footer">
-                    <div class="cart-total">
-                        <span>Total:</span>
-                        <span>0.00</span>
-                    </div>
-                    <button class="checkout-btn">Proceed to Checkout</button>
-                </div>
-            </div>
             </nav>
         </header>
 
+        <!-- Catalog Heading -->
+        <h2 class="catalog-heading">Our Pastries</h2>
+        <p class="catalog-subheading">Click any item to see reviews</p>
 
+        <!-- Product Grid -->
         <div class="product-container">
 
-            <a href="reviews.html" class="product-card">
-            <img src="cake.png" alt="Cake" class="product-img">
-            <div class="overlay">
-                <h3>Chocolate Cake</h3>
-                <p>Rich, moist, and layered with deep chocolate flavor.</p>
-            </div>
+            <a href="reviews.html?product=Chocolate+Cake" class="product-card">
+                <img src="cake.png" alt="Chocolate Cake" class="product-img">
+                <div class="card-overlay">
+                    <h3>Chocolate Cake</h3>
+                    <p>Rich, moist, and layered with deep chocolate flavor.</p>
+                    <div class="stars">★★★★★</div>
+                </div>
             </a>
 
-            <a href="reviews.html" class="product-card">
-            <img src="croissant.png" alt="Croissant" class="product-img">
-            <div class="overlay">
-                <h3>Croissant</h3>
-                <p>Buttery, flaky, and fresh from the oven.</p>
-            </div>
+            <a href="reviews.html?product=Croissant" class="product-card">
+                <img src="croissant.png" alt="Croissant" class="product-img">
+                <div class="card-overlay">
+                    <h3>Croissant</h3>
+                    <p>Buttery, flaky, and fresh from the oven.</p>
+                    <div class="stars">★★★★☆</div>
+                </div>
             </a>
 
-            <a href="reviews.html" class="product-card">
-            <img src="muffin.png" alt="Muffin" class="product-img">
-            <div class="overlay">
-                <h3>Blueberry Muffin</h3>
-                <p>Soft, fluffy, and packed with sweet blueberries.</p>
-            </div>
+            <a href="reviews.html?product=Blueberry+Muffin" class="product-card">
+                <img src="muffin.png" alt="Blueberry Muffin" class="product-img">
+                <div class="card-overlay">
+                    <h3>Blueberry Muffin</h3>
+                    <p>Soft, fluffy, and packed with sweet blueberries.</p>
+                    <div class="stars">★★★★★</div>
+                </div>
             </a>
 
-            <a href="reviews.html" class="product-card">
-            <img src="cookie.png" alt="Cookie" class="product-img">
-            <div class="overlay">
-                <h3>Chocolate Chip Cookie</h3>
-                <p>Delicious and crispy cookies with chunks of chocolate.</p>
-            </div>
+            <a href="reviews.html?product=Chocolate+Chip+Cookie" class="product-card">
+                <img src="cookie.png" alt="Chocolate Chip Cookie" class="product-img">
+                <div class="card-overlay">
+                    <h3>Chocolate Chip Cookie</h3>
+                    <p>Delicious and crispy with chunks of chocolate.</p>
+                    <div class="stars">★★★★☆</div>
+                </div>
             </a>
 
-            <a href="reviews.html" class="product-card">
-            <img src="cupcake.png" alt="Cupcake" class="product-img">
-            <div class="overlay">
-                <h3>Red Velvet Cupcake</h3>
-                <p>Velvety smooth with a hint of cocoa and creamy frosting.</p>
-            </div>
+            <a href="reviews.html?product=Red+Velvet+Cupcake" class="product-card">
+                <img src="cupcake.png" alt="Red Velvet Cupcake" class="product-img">
+                <div class="card-overlay">
+                    <h3>Red Velvet Cupcake</h3>
+                    <p>Velvety smooth with a hint of cocoa and creamy frosting.</p>
+                    <div class="stars">★★★★★</div>
+                </div>
             </a>
-
 
         </div>
 
+        <!-- Footer -->
+        <footer class="footer">
+            <p>CCAPDEV S12 Team Gardenia</p>
+        </footer>
 
-
-
-
-    <footer class="footer">
-        <p>CCAPDEV S12 Team Gardenia </p>
-    </footer>
         <script src="script.js"></script>
     </body>
 </html>

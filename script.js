@@ -339,3 +339,136 @@ function renderSellerProducts() {
 }
 
 window.renderSellerProducts = renderSellerProducts;
+/*review */ 
+document.addEventListener('DOMContentLoaded', () => {
+
+    //  Determine which product this page is for ─
+    const params      = new URLSearchParams(window.location.search);
+    const productName = params.get('product') || 'Chocolate Cake';
+    const storageKey  = 'bakehubReviews_' + productName.toLowerCase().replace(/\s+/g, '_');
+
+    // extend as you add more products
+    const productMeta = {
+        'Chocolate Cake':       { img: 'cake.png',      desc: 'Rich, moist, and layered with deep chocolate flavor.' },
+        'Croissant':            { img: 'croissant.png', desc: 'Buttery, flaky, and fresh from the oven.' },
+        'Blueberry Muffin':     { img: 'muffin.png',    desc: 'Soft, fluffy, and packed with sweet blueberries.' },
+        'Chocolate Chip Cookie':{ img: 'cookie.png',    desc: 'Delicious and crispy with chunks of chocolate.' },
+        'Red Velvet Cupcake':   { img: 'cupcake.png',   desc: 'Velvety smooth with a hint of cocoa and creamy frosting.' },
+    };
+
+    const meta = productMeta[productName] || { img: 'cake.png', desc: '' };
+    document.getElementById('hero-name').textContent = productName;
+    document.getElementById('hero-desc').textContent = meta.desc;
+    document.getElementById('hero-img').src          = meta.img;
+    document.getElementById('hero-img').alt          = productName;
+    document.title = 'Bakehub | ' + productName + ' Reviews';
+
+    //  Load reviews 
+    function getReviews() {
+        return JSON.parse(localStorage.getItem(storageKey) || '[]');
+    }
+
+    function saveReviews(reviews) {
+        localStorage.setItem(storageKey, JSON.stringify(reviews));
+    }
+
+    //  Star helpers 
+    function starsHTML(n) {
+        return '★'.repeat(n) + '☆'.repeat(5 - n);
+    }
+
+    //  Render everything 
+    function render() {
+        const reviews = getReviews();
+        const list    = document.getElementById('reviews-list');
+
+        // Rating summary
+        const counts = [0, 0, 0, 0, 0]; // index 0 = 1 star
+        reviews.forEach(r => counts[r.stars - 1]++);
+        const total = reviews.length;
+        const avg   = total
+            ? (reviews.reduce((s, r) => s + r.stars, 0) / total).toFixed(1)
+            : null;
+
+        document.getElementById('avg-score').textContent     = avg || '—';
+        document.getElementById('avg-stars').textContent     = avg ? starsHTML(Math.round(avg)) : '☆☆☆☆☆';
+        document.getElementById('review-count').textContent  = total + (total === 1 ? ' review' : ' reviews');
+
+        // Bar chart
+        const barsEl = document.getElementById('rating-bars');
+        barsEl.innerHTML = '';
+        for (let i = 5; i >= 1; i--) {
+            const pct = total ? Math.round((counts[i - 1] / total) * 100) : 0;
+            const row = document.createElement('div');
+            row.className = 'bar-row';
+            row.innerHTML = `
+                <span>${i} ★</span>
+                <div class="bar-track"><div class="bar-fill" style="width:${pct}%"></div></div>
+                <span>${counts[i - 1]}</span>
+            `;
+            barsEl.appendChild(row);
+        }
+
+        // Review cards
+        if (!total) {
+            list.innerHTML = '<p class="no-reviews">No reviews yet — be the first!</p>';
+            return;
+        }
+
+        list.innerHTML = '';
+        reviews.slice().reverse().forEach((r, i) => {
+            const card = document.createElement('div');
+            card.className = 'review-card';
+            card.style.animationDelay = (i * 0.06) + 's';
+            card.innerHTML = `
+                <div class="review-header">
+                    <div>
+                        <div class="reviewer-name">${escapeHTML(r.name)}</div>
+                        <div class="review-date">${r.date}</div>
+                    </div>
+                    <div class="review-stars">${starsHTML(r.stars)}</div>
+                </div>
+                <p class="review-comment">${escapeHTML(r.comment)}</p>
+            `;
+            list.appendChild(card);
+        });
+    }
+
+    //  Submit review 
+    document.getElementById('submit-review-btn').addEventListener('click', () => {
+        const name    = document.getElementById('reviewer-name').value.trim();
+        const comment = document.getElementById('review-comment').value.trim();
+        const starEl  = document.querySelector('input[name="stars"]:checked');
+
+        if (!name)    { alert('Please enter your name.'); return; }
+        if (!starEl)  { alert('Please select a star rating.'); return; }
+        if (!comment) { alert('Please write a comment.'); return; }
+
+        const reviews = getReviews();
+        reviews.push({
+            name,
+            stars:   parseInt(starEl.value),
+            comment,
+            date: new Date().toLocaleDateString('en-PH', {
+                year: 'numeric', month: 'long', day: 'numeric'
+            })
+        });
+        saveReviews(reviews);
+
+        // Reset form
+        document.getElementById('reviewer-name').value  = '';
+        document.getElementById('review-comment').value = '';
+        document.querySelector('input[name="stars"]:checked').checked = false;
+
+        render();
+
+        // Scroll to reviews list
+        document.getElementById('reviews-list').scrollIntoView({ behavior: 'smooth' });
+    });
+
+    function escapeHTML(str) {
+        return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    render();
+});
