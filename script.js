@@ -196,14 +196,28 @@ if (submit && usernameField) {
     });
 }
 
+
 function validateLogin(username, password) {
     const users = getUsers();
     const user  = users[username];
 
+    // Hardcoded admin account — username: admin / password: admin123
+    if (username === 'admin' && password === 'admin123') {
+        saveSession({ username: 'admin', role: 'admin' });
+        alert("Welcome, Admin!");
+        window.location.href = "admin.html";
+        return;
+    }
+
     if (user && user.password === password) {
         saveSession({ username, role: user.role });
         alert("Login successful!");
-        window.location.href = "index.html";
+        // Route admins registered in localStorage to dashboard too
+        if (user.role === 'admin') {
+            window.location.href = "admin.html";
+        } else {
+            window.location.href = "index.html";
+        }
     } else {
         alert("Invalid username or password. Please try again.");
         document.getElementById('username').value = "";
@@ -339,10 +353,15 @@ function renderSellerProducts() {
 }
 
 window.renderSellerProducts = renderSellerProducts;
-/*review */ 
+
+// ── UPDATED: review block now guards against running on non-review pages ──
 document.addEventListener('DOMContentLoaded', () => {
 
-    //  Determine which product this page is for ─
+    // Only run on reviews.html — bail out if the hero elements don't exist
+    const heroName = document.getElementById('hero-name');
+    if (!heroName) return;
+
+    //  Determine which product this page is for
     const params      = new URLSearchParams(window.location.search);
     const productName = params.get('product') || 'Chocolate Cake';
     const storageKey  = 'bakehubReviews_' + productName.toLowerCase().replace(/\s+/g, '_');
@@ -357,7 +376,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const meta = productMeta[productName] || { img: 'cake.png', desc: '' };
-    document.getElementById('hero-name').textContent = productName;
+    heroName.textContent = productName;
     document.getElementById('hero-desc').textContent = meta.desc;
     document.getElementById('hero-img').src          = meta.img;
     document.getElementById('hero-img').alt          = productName;
@@ -434,37 +453,39 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    //  Submit review 
-    document.getElementById('submit-review-btn').addEventListener('click', () => {
-        const name    = document.getElementById('reviewer-name').value.trim();
-        const comment = document.getElementById('review-comment').value.trim();
-        const starEl  = document.querySelector('input[name="stars"]:checked');
+    const submitBtn = document.getElementById('submit-review-btn');
+    if (submitBtn) {
+        submitBtn.addEventListener('click', () => {
+            const name    = document.getElementById('reviewer-name').value.trim();
+            const comment = document.getElementById('review-comment').value.trim();
+            const starEl  = document.querySelector('input[name="stars"]:checked');
 
-        if (!name)    { alert('Please enter your name.'); return; }
-        if (!starEl)  { alert('Please select a star rating.'); return; }
-        if (!comment) { alert('Please write a comment.'); return; }
+            if (!name)    { alert('Please enter your name.'); return; }
+            if (!starEl)  { alert('Please select a star rating.'); return; }
+            if (!comment) { alert('Please write a comment.'); return; }
 
-        const reviews = getReviews();
-        reviews.push({
-            name,
-            stars:   parseInt(starEl.value),
-            comment,
-            date: new Date().toLocaleDateString('en-PH', {
-                year: 'numeric', month: 'long', day: 'numeric'
-            })
+            const reviews = getReviews();
+            reviews.push({
+                name,
+                stars:   parseInt(starEl.value),
+                comment,
+                date: new Date().toLocaleDateString('en-PH', {
+                    year: 'numeric', month: 'long', day: 'numeric'
+                })
+            });
+            saveReviews(reviews);
+
+            // Reset form
+            document.getElementById('reviewer-name').value  = '';
+            document.getElementById('review-comment').value = '';
+            document.querySelector('input[name="stars"]:checked').checked = false;
+
+            render();
+
+            // Scroll to reviews list
+            document.getElementById('reviews-list').scrollIntoView({ behavior: 'smooth' });
         });
-        saveReviews(reviews);
-
-        // Reset form
-        document.getElementById('reviewer-name').value  = '';
-        document.getElementById('review-comment').value = '';
-        document.querySelector('input[name="stars"]:checked').checked = false;
-
-        render();
-
-        // Scroll to reviews list
-        document.getElementById('reviews-list').scrollIntoView({ behavior: 'smooth' });
-    });
+    }
 
     function escapeHTML(str) {
         return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
