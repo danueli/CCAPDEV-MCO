@@ -23,7 +23,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     function addToCart(name, price) {
-        // Check if item already exists
         const existingItem = cart.find(item => item.name === name);
 
         if (existingItem) {
@@ -47,8 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function updateQuantity(index, change) {
         cart[index].quantity += change;
-        
-        // If quantity drops to 0, remove the item
+
         if (cart[index].quantity <= 0) {
             cart.splice(index, 1);
         }
@@ -56,9 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
         renderCart();
     }
 
-    // 4. Render the Cart HTML
     function renderCart() {
-        // Clear current HTML
         cartItemsContainer.innerHTML = '';
         let total = 0;
         let totalCount = 0;
@@ -79,7 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 cartItem.innerHTML = `
                     <div class="item-details">
                         <span class="item-name">${item.name}</span>
-                        <span class="item-price">&#8369;${item.price.toFixed(2)}</span>
+                        <span class="item-price">₱${item.price.toFixed(2)}</span>
                         <div class="item-quantity">
                             <button class="qty-btn" onclick="changeQty(${index}, -1)">-</button>
                             <span>${item.quantity}</span>
@@ -92,21 +88,17 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
-        // Update Total Price and Badge Count
         cartTotalElement.textContent = total.toFixed(2);
         cartCountElement.textContent = totalCount;
     }
 
-
+    // Attach Add to Cart for hardcoded product cards
     addToCartButtons.forEach(button => {
         button.addEventListener('click', (e) => {
             const card = e.target.closest('.product-card');
             const name = card.getAttribute('data-name');
             const price = card.getAttribute('data-price');
-            
             addToCart(name, price);
-            
-            //Open cart automatically when adding
             document.getElementById('cart-toggle').checked = true;
         });
     });
@@ -115,33 +107,17 @@ document.addEventListener('DOMContentLoaded', () => {
     window.removeItem = removeFromCart;
     window.changeQty = updateQuantity;
 
-    //  Checkout Logic 
+    // Checkout Logic
     const checkoutBtn = document.querySelector('.checkout-btn');
-
-    checkoutBtn.addEventListener('click', () => {
-        if (cart.length === 0) {
-            alert("Your cart is empty! Add some delicious pastries first.");
-            return;
-        }
-
-        // Cart is already saved per-user — just navigate to checkout
-        window.location.href = 'checkout.html';
-    });
-
-    // Search Button
-    const searchInput = document.querySelector(".search-input");
-    const searchBtn = document.querySelector(".search-btn");
-    const productCards = document.querySelectorAll(".product-card");
-
-    function doSearch() {
-        const query = searchInput.value.toLowerCase();
-
-        productCards.forEach(card => {
-            const name = card.dataset.name.toLowerCase();
-            card.style.display = name.includes(query) ? "block" : "none";
-            });
-        }
-    searchBtn.addEventListener("click", doSearch);
+    if (checkoutBtn) {
+        checkoutBtn.addEventListener('click', () => {
+            if (cart.length === 0) {
+                alert("Your cart is empty! Add some delicious pastries first.");
+                return;
+            }
+            window.location.href = 'checkout.html';
+        });
+    }
 
     // Render cart immediately on load to restore saved items
     if (cartItemsContainer) renderCart();
@@ -153,10 +129,31 @@ document.addEventListener('DOMContentLoaded', () => {
         addProductLink.style.display = 'inline';
     }
 
-    // Render seller-added products on index page
+    // Render seller added-products 
     const sellerProductsContainer = document.getElementById('seller-products');
     if (sellerProductsContainer) {
         renderSellerProducts();
+    }
+
+    // Listen for cart events from dynamically created seller product cards
+    document.addEventListener('sellerAddToCart', (e) => {
+        addToCart(e.detail.name, e.detail.price);
+    });
+
+    // Search Button 
+    const searchInput = document.querySelector(".search-input");
+    const searchBtn = document.querySelector(".search-btn");
+    
+    if (searchInput && searchBtn) {
+        function doSearch() {
+            const query = searchInput.value.toLowerCase();
+            // Re-query every call so seller-added cards are always included
+            document.querySelectorAll(".product-card").forEach(card => {
+                const name = card.dataset.name.toLowerCase();
+                card.style.display = name.includes(query) ? "block" : "none";
+            });
+        }
+        searchBtn.addEventListener("click", doSearch);
     }
 
 });
@@ -181,21 +178,22 @@ function saveSession(sessionObj) {
     localStorage.setItem('bakehubSession', JSON.stringify(sessionObj));
 }
 
-// ------------------------------------------
+// User Login 
 
-const submit = document.querySelector('.submit')
+const submit = document.querySelector('.submit');
+const usernameField = document.getElementById('username');
 
-if (submit) {
+if (submit && usernameField) {
     submit.addEventListener("click", (e) => {
         try {
             e.preventDefault();
-            const username = document.getElementById('username').value;
+            const username = usernameField.value;
             const password = document.getElementById('password').value;
             validateLogin(username, password);
         } catch (error) {
             console.error("Error during login:", error);
         }
-    })
+    });
 }
 
 function validateLogin(username, password) {
@@ -215,7 +213,7 @@ function validateLogin(username, password) {
 
 // Signup section for sellers
 
-const addseller = document.querySelector('.ss')
+const addseller = document.querySelector('.ss');
 
 if (addseller) {
     addseller.addEventListener("click", (e) => {
@@ -227,7 +225,7 @@ if (addseller) {
         } catch (error) {
             console.error("Error during signup:", error);
         }
-    })
+    });
 }
 
 function addSeller(shopname, password) {
@@ -243,7 +241,6 @@ function addSeller(shopname, password) {
         return;
     }
 
-    // Save new seller account using shop name as the key/identifier
     users[shopname] = { password, role: 'seller', shopname: shopname };
     saveUsers(users);
 
@@ -253,7 +250,7 @@ function addSeller(shopname, password) {
 
 // Signup section for buyers
 
-const addcustomer = document.querySelector('.cs')
+const addcustomer = document.querySelector('.cs');
 
 if (addcustomer) {
     addcustomer.addEventListener("click", (e) => {
@@ -265,7 +262,7 @@ if (addcustomer) {
         } catch (error) {
             console.error("Error during signup:", error);
         }
-    })
+    });
 }
 
 function addCustomer(username, password) {
@@ -281,7 +278,6 @@ function addCustomer(username, password) {
         return;
     }
 
-    // Save new customer account persistently
     users[username] = { password, role: 'customer' };
     saveUsers(users);
 
@@ -289,5 +285,57 @@ function addCustomer(username, password) {
     window.location.href = "login.html";
 }
 
-// To Implement: Seller Tools for Adding/Editing Products 
+// Render seller-added products from localStorage onto index.html
+function renderSellerProducts() {
+    const container = document.getElementById('seller-products');
+    if (!container) return;
 
+    const products = JSON.parse(localStorage.getItem('bakehubSellerProducts') || '[]');
+    container.innerHTML = '';
+
+    if (products.length === 0) return;
+
+    // Check if the current user is a seller to decide whether to show Remove buttons
+    const session = getSession();
+    const isSeller = session && session.role === 'seller';
+
+    products.forEach((product) => {
+        const card = document.createElement('div');
+        card.classList.add('product-card');
+        card.setAttribute('data-name', product.name);
+        card.setAttribute('data-price', product.price.toFixed(2));
+        card.innerHTML = `
+            <h3>${product.name}</h3>
+            <p class="price">₱${product.price.toFixed(2)}</p>
+            <button class="add-to-cart-btn seller-cart-btn">Add to Cart</button>
+            ${isSeller ? `<button class="remove-product-btn" style="margin-top:8px;background:#8b5e3c;color:white;border:none;padding:6px 12px;border-radius:4px;cursor:pointer;width:100%;">Remove Listing</button>` : ''}
+        `;
+
+        // Add to Cart
+        card.querySelector('.seller-cart-btn').addEventListener('click', () => {
+            const event = new CustomEvent('sellerAddToCart', {
+                detail: { name: product.name, price: product.price.toFixed(2) }
+            });
+            document.dispatchEvent(event);
+            document.getElementById('cart-toggle').checked = true;
+        });
+
+        // Remove Listing (only rendered for sellers)
+        if (isSeller) {
+            card.querySelector('.remove-product-btn').addEventListener('click', () => {
+                if (!confirm(`Remove "${product.name}" from your listings?`)) return;
+
+                let stored = JSON.parse(localStorage.getItem('bakehubSellerProducts') || '[]');
+                stored = stored.filter(p => p.name.toLowerCase() !== product.name.toLowerCase());
+                localStorage.setItem('bakehubSellerProducts', JSON.stringify(stored));
+
+                // Re-render so the card disappears immediately
+                renderSellerProducts();
+            });
+        }
+
+        container.appendChild(card);
+    });
+}
+
+window.renderSellerProducts = renderSellerProducts;
