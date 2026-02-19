@@ -845,4 +845,82 @@ input[type = "number"] {
             color: #8b5e3c;
             font-weight: 700;
         }
-   
+
+/* Adjust header text on Smaller Screen */
+.navbar image, .navbar img {
+  height: 95px !important;
+}
+
+.navbar a {
+  font-size: 1.15rem;
+}
+
+/* Adjust Login Text on Smaller Screen */
+.signup-options {
+  justify-content: center;
+  margin-left: 0;
+}
+
+/* Responsive CSS */
+@media (max-width: 768px) {
+
+  .navbar {
+    flex-direction: column;
+    align-items: center;
+    padding: 8px 12px;
+    gap: 8px;
+  }
+
+  .navbar image, .navbar img { height: clamp(40px, 8vw, 55px) !important; }
+
+  .navbar nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .navbar nav a {
+    font-size: clamp(0.68rem, 2vw, 0.85rem);
+    margin-left: 0;
+    padding: 3px 6px;
+  }
+
+  .cart-icon-container { margin-left: 0; }
+
+  .login-card {
+    width: min(95%, 500px);
+    padding: clamp(14px, 4vw, 24px);
+    margin: 20px auto;
+  }
+
+  .login.title, .login-card h2 {
+    font-size: clamp(1rem, 4vw, 1.4rem);
+    text-align: center;
+  }
+
+  input[type="text"], input[type="username"],
+  input[type="password"], input[type="email"], input[type="number"] {
+    width: 100%;
+    margin-left: 0;
+    font-size: clamp(0.82rem, 2.5vw, 0.95rem);
+    box-sizing: border-box;
+  }
+
+  .submit, .ss, .cs {
+    width: 100%;
+    font-size: clamp(0.88rem, 2.5vw, 0.95rem);
+    padding: 12px 5px;
+  }
+
+  .signup-options {
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .search-container { flex-direction: column; align-items: center; }
+  .search-input, .search-btn { width: min(85%, 300px); }
+
+  .cart-panel { width: min(100%, 350px); }
+}
