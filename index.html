@@ -2,112 +2,137 @@
 <html>
     <head>
         <title>Bakehub | Home</title>
-        <link rel = "icon" type = "image/png" href = "bakehub_favicon.png">
+        <link rel="icon" type="image/png" href="bakehub_favicon.png">
         <link rel="stylesheet" href="style.css">
+        <style>
+   
+            .home-product-card {
+                background-color: #fff;
+                padding: 20px;
+                width: 150px;
+                border-radius: 8px;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                color: #333;
+                /* reset catalog overrides */
+                position: static;
+                overflow: visible;
+                cursor: default;
+            }
+
+            .home-product-card h3 {
+                font-size: 0.95rem;
+                margin-bottom: 8px;
+                color: #4b2e2e;
+            }
+
+            .home-product-card .price {
+                color: #8b5e3c;
+                font-weight: bold;
+                font-size: 0.9rem;
+                margin-bottom: 4px;
+            }
+        </style>
     </head>
 
 <body>
 <!-- Header -->
 <header class="navbar">
-    <image src = "search.png" height = "75"></image>
+    <image src="search.png" height="75"></image>
     <nav>
-      <a href="index.html">Home</a>
-      <a href="catalog.html">Catalog</a>
-      <a href="help.html">Help</a>
-      <a href="login.html" id="logout-link">Logout</a>
-      <a href="add_product.html" id="add-product-link" style="display:none;">Add Product</a>
-      <a href ="profile.html" id="profile-link">Profile</a>
-      
-      <input type="checkbox" id="cart-toggle" class="cart-toggle"> 
+        <a href="index.html">Home</a>
+        <a href="catalog.html">Catalog</a>
+        <a href="help.html">Help</a>
+        <a href="login.html" id="logout-link">Logout</a>
+        <a href="add_product.html" id="add-product-link" style="display:none;">Add Product</a>
+        <a href="profile.html" id="profile-link">Profile</a>
+
+        <input type="checkbox" id="cart-toggle" class="cart-toggle">
         <label for="cart-toggle" class="cart-icon-container">
             <div class="cart-icon"><img src="cart-icon.png" alt="Cart Icon"></div>
             <div class="cart-count">0</div>
         </label>
-        
-    <label for="cart-toggle" class="overlay"></label>
 
-    <div class="cart-panel">
-        <div class="cart-header">
-            <h2>My Cart</h2>
-            <label for="cart-toggle" class="close-btn">&times;</label>
-        </div>
-        <div class="cart-items">
-            <div class="empty-cart">
-                <div class="empty-cart-icon"><img src="cart-icon.png" alt="Cart Icon"></div>
-                <p>Your cart is empty</p>
+        <label for="cart-toggle" class="overlay"></label>
+
+        <div class="cart-panel">
+            <div class="cart-header">
+                <h2>My Cart</h2>
+                <label for="cart-toggle" class="close-btn">&times;</label>
+            </div>
+            <div class="cart-items">
+                <div class="empty-cart">
+                    <div class="empty-cart-icon"><img src="cart-icon.png" alt="Cart Icon"></div>
+                    <p>Your cart is empty</p>
+                </div>
+            </div>
+            <div class="cart-footer">
+                <div class="cart-total">
+                    <span>Total:</span>
+                    <span>0.00</span>
+                </div>
+                <button class="checkout-btn">Proceed to Checkout</button>
             </div>
         </div>
-        <div class="cart-footer">
-            <div class="cart-total">
-                <span>Total:</span>
-                <span>0.00</span>
-            </div>
-            <button class="checkout-btn">Proceed to Checkout</button>
-        </div>
-    </div>
     </nav>
 </header>
 
 <!-- Main Content -->
-  <main class="main-content">
+<main class="main-content">
     <h2>Welcome to Bakehub</h2>
-    <a href = "Add_Product.html">Debug</a> <!-- Dont remove for debugging purposes-->
+    <a href="Add_Product.html">Debug</a> <!-- Don't remove for debugging purposes -->
     <p>Order your favorite pastries here!</p>
 
-<!-- Search Bar -->
+    <!-- Search Bar -->
     <div class="search-container">
-      <input type="text" placeholder="Search pastries..." class="search-input">
-      <button class="search-btn">Search</button>
+        <input type="text" placeholder="Search pastries..." class="search-input">
+        <button class="search-btn">Search</button>
     </div>
 
-<!-- Products (placeholders only) -->
-  <div class="products">
-    <div class="product-card" data-name="Chocolate Cake" data-price="100.00">
-        <h3>Chocolate Cake</h3>
-        <p class="price">₱100.00</p>
-        <button class="add-to-cart-btn">Add to Cart</button>
+    <!-- Products — use 'product-card' for JS targeting, 'home-product-card' for styling -->
+    <div class="products">
+
+        <div class="product-card home-product-card" data-name="Chocolate Cake" data-price="100.00">
+            <h3>Chocolate Cake</h3>
+            <p class="price">₱100.00</p>
+            <button class="add-to-cart-btn">Add to Cart</button>
+        </div>
+
+        <div class="product-card home-product-card" data-name="Croissant" data-price="40.00">
+            <h3>Croissant</h3>
+            <p class="price">₱40.00</p>
+            <button class="add-to-cart-btn">Add to Cart</button>
+        </div>
+
+        <div class="product-card home-product-card" data-name="Blueberry Muffin" data-price="50.00">
+            <h3>Blueberry Muffin</h3>
+            <p class="price">₱50.00</p>
+            <button class="add-to-cart-btn">Add to Cart</button>
+        </div>
+
+        <div class="product-card home-product-card" data-name="Chocolate Chip Cookie" data-price="80.00">
+            <h3>Chocolate Chip Cookie</h3>
+            <p class="price">₱80.00</p>
+            <button class="add-to-cart-btn">Add to Cart</button>
+        </div>
+
+        <div class="product-card home-product-card" data-name="Red Velvet Cupcake" data-price="85.00">
+            <h3>Red Velvet Cupcake</h3>
+            <p class="price">₱85.00</p>
+            <button class="add-to-cart-btn">Add to Cart</button>
+        </div>
+
     </div>
 
-    <div class="product-card" data-name="Croissant" data-price="40.00">
-        <h3>Croissant</h3>
-        <p class="price">₱40.00</p>
-        <button class="add-to-cart-btn">Add to Cart</button>
-    </div>
+    <!-- Seller-added products -->
+    <div class="products" id="seller-products"></div>
 
-    <div class="product-card" data-name="Blueberry Muffin" data-price="50.00">
-        <h3>Blueberry Muffin</h3>
-        <p class="price">₱50.00</p>
-        <button class="add-to-cart-btn">Add to Cart</button>
-    </div>
-
-    <div class="product-card" data-name="Chocolate Chip Cookie" data-price="80.00">
-        <h3>Chocolate Chip Cookie</h3>
-        <p class="price">₱80.00</p>
-        <button class="add-to-cart-btn">Add to Cart</button>
-    </div>
-
-    <div class="product-card" data-name="Red Velvet Cupcake" data-price="85.00">
-        <h3>Red Velvet Cupcake</h3>
-        <p class="price">₱85.00</p>
-        <button class="add-to-cart-btn">Add to Cart</button>
-    </div>
-  </div>
-
-  <!-- Seller-added products -->
-  <div class="products" id="seller-products"></div>
-
-  <a href = "Add_Product.html"></a>
-
-  </main>
-
- 
+</main>
 
 <!-- Footer -->
-  <footer class="footer">
-    <p>CCAPDEV S12 Team Gardenia </p>
-  </footer>
+<footer class="footer">
+    <p>CCAPDEV S12 Team Gardenia</p>
+</footer>
 
 <script src="script.js"></script>
 </body>
-
 </html>
