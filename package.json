@@ -1,0 +1,26 @@
+{
+  "name": "ccapdev-mco",
+  "version": "1.0.0",
+  "description": "CCAPDEV MCO Repo",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/danueli/CCAPDEV-MCO.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/danueli/CCAPDEV-MCO/issues"
+  },
+  "homepage": "https://github.com/danueli/CCAPDEV-MCO#readme",
+  "dependencies": {
+    "express": "^4.22.1",
+    "express-handlebars": "^8.0.6",
+    "mongoose": "^9.2.4"
+  },
+  "type": "commonjs"
+}
