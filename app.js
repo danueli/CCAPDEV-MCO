@@ -20,6 +20,19 @@ app.set('views', './views');
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static('public'));
+app.use(session({
+    secret: 'bakehub_secret',
+    resave: false,
+    saveUninitialized: false,
+}));
+
+//Routes
+//app.use('/',         require('./routes/index'));
+app.use('/products', require('./routes/products'));
+app.use('/cart',     require('./routes/cart'));
+app.use('/users',    require('./routes/users'));
+//app.use('/reviews', require('./routes/reviews'));
+//app.use('/orders',   require('./routes/orders'));
 
 // Start server
 app.listen(3000, () => {
