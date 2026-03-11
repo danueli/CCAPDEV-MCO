@@ -25,7 +25,11 @@ app.use(express.static('public'));
 app.listen(3000, () => {
   console.log('Running on http://localhost:3000');
 });
-
+//importing models
+const Cart = require('./models/Cart');
+const Product = require('./models/Product');
+const User = require('./models/User');
+const Reviews = require('./models/Reviews');
 /*CART ROUTES*/
 
 // Get Cart 
@@ -50,8 +54,8 @@ app.post('/cart/add/:username', async (req, res) => {
   }
   let cart = await Cart.findOne({ userId: user._id });
   if (!cart) {
-    cart = new Cart({ userId: user._id, items: [] });
-  }
+  cart = new Cart({ userId: user._id, items: [{ productId, quantity }] });
+}
   else {
     const existingItem = cart.items.find(item => item.productId.equals(productId));
     if (existingItem) {
