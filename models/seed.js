@@ -20,7 +20,9 @@ function computeTotal(items, products) {
     // Clear existing data
     await Product.deleteMany({});
     await Cart.deleteMany({});
-
+    await User.deleteMany({});
+    await Reviews.deleteMany({});
+    
     //Seed Users
 
     //Seed Products
@@ -34,6 +36,15 @@ function computeTotal(items, products) {
     console.log('Products seeded:', products.length);
 
     //Seed User first before Cart
+    const users = await User.insertMany([
+    { firstName: 'Juan',  lastName: 'Dela Cruz', email: 'juan.dela.cruz@example.com',phone: '09760156942',street: '123 Main St', city: 'Manila', zipCode: '1000', password: 'password123', type: 'customer' },
+    { firstName: 'Justin', lastName: 'Beiber',    email: 'justin.beiber@example.com',   phone: '09123456789',street: '456 Oak Ave', city: 'Cebu', zipCode: '6000', password: 'password234', type: 'customer' },
+    { firstName: 'Titus', lastName: 'Rodriguez',     email: 'titus.rodriguez@example.com',    phone: '09123456789',street: '789 Pine Rd', city: 'Davao', zipCode: '8000', password: 'password567', type: 'customer' },
+    { firstName: 'Mang',   lastName: 'Inasal',    email: 'mang.inasal@example.com',     phone: '09123456789',street: '321 Elm St', city: 'Baguio', zipCode: '2000', password: 'password678', type: 'customer' },
+    { firstName: 'Kent',  lastName: 'Lopez',  email: 'kent.lopez@example.com',phone: '09123456781',  street: '654 Maple Dr', city: 'Cagayan de Oro', zipCode: '9000', password: 'password910', type: 'customer' },
+]);
+console.log('Users seeded:', users.length);
+
 
     //Seed Carts
   const cartOne = [
@@ -58,13 +69,17 @@ function computeTotal(items, products) {
     ];
 
     const carts = await Cart.insertMany([
-        { userId: user._id, items: cartOne, totalPrice: computeTotal(cart1Items, products) },
-        { userId: user._id, items: cartTwo, totalPrice: computeTotal(cart2Items, products) },
-        { userId: user._id, items: cartThree, totalPrice: computeTotal(cart3Items, products) },
-        { userId: user._id, items: cartFour, totalPrice: computeTotal(cart4Items, products) },
-        { userId: user._id, items: cartFive, totalPrice: computeTotal(cart5Items, products) },
+        //associate each cart with a user and compute total price
+    { userId: users[0]._id, items: cartOne,   totalPrice: computeTotal(cartOne, products) },
+    { userId: users[1]._id, items: cartTwo,   totalPrice: computeTotal(cartTwo, products) },
+    { userId: users[2]._id, items: cartThree, totalPrice: computeTotal(cartThree, products) },
+    { userId: users[3]._id, items: cartFour,  totalPrice: computeTotal(cartFour, products) },
+    { userId: users[4]._id, items: cartFive,  totalPrice: computeTotal(cartFive, products) },
     ]);
     console.log('Carts seeded:', carts.length);
+
+
+
 
     mongoose.disconnect();
     console.log('Disconnected.');
