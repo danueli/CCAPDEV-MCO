@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Bakehub | Cart</title>
+  <link rel="icon" type="image/png" href="bakehub_favicon.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="navbar">
+    <image src="search.png" height="75"></image>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/catalog">Catalog</a>
+      <a href="/help">Help</a>
+    </nav>
+  </header>
+
+  <!-- Cart Page Content -->
+  <main class="main-content">
+    <h2>My Cart</h2>
+
+    {{#if cart.items.length}}
+      <div class="cart-items">
+        {{#each cart.items}}
+          <div class="cart-item">
+            <img src="{{this.productId.image}}" alt="{{this.productId.name}}" height="80">
+            <div>
+              <h3>{{this.productId.name}}</h3>
+              <p>₱{{this.productId.price}} x {{this.quantity}}</p>
+              <p>Subtotal: ₱{{this.productId.price}}</p>
+            </div>
+
+            <!-- Remove button -->
+            <form method="POST" action="/cart/remove/{{../cart.userId}}">
+              <input type="hidden" name="productId" value="{{this.productId._id}}">
+              <button type="submit">Remove</button>
+            </form>
+          </div>
+        {{/each}}
+      </div>
+
+      <div class="cart-footer">
+        <div class="cart-total">
+          <span>Total:</span>
+          <span>₱{{cart.totalPrice}}</span>
+        </div>
+        <a href="/checkout"><button class="checkout-btn">Proceed to Checkout</button></a>
+      </div>
+
+    {{else}}
+      <div class="empty-cart">
+        <img src="cart-icon.png" alt="Cart Icon">
+        <p>Your cart is empty</p>
+      </div>
+    {{/if}}
+
+  </main>
+
+  <footer class="footer">
+    <p>CCAPDEV S12 Team Gardenia</p>
+  </footer>
+
+</body>
+</html>
