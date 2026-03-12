@@ -22,7 +22,7 @@ function computeTotal(items, products) {
     await Cart.deleteMany({});
     await User.deleteMany({});
     await Reviews.deleteMany({});
-    
+
     //Seed Users
 
     //Seed Products
@@ -37,13 +37,14 @@ function computeTotal(items, products) {
 
     //Seed User first before Cart
     const users = await User.insertMany([
-    { firstName: 'Juan',  lastName: 'Dela Cruz', email: 'juan.dela.cruz@example.com',phone: '09760156942',street: '123 Main St', city: 'Manila', zipCode: '1000', password: 'password123', type: 'customer' },
-    { firstName: 'Justin', lastName: 'Beiber',    email: 'justin.beiber@example.com',   phone: '09123456789',street: '456 Oak Ave', city: 'Cebu', zipCode: '6000', password: 'password234', type: 'customer' },
-    { firstName: 'Titus', lastName: 'Rodriguez',     email: 'titus.rodriguez@example.com',    phone: '09123456789',street: '789 Pine Rd', city: 'Davao', zipCode: '8000', password: 'password567', type: 'customer' },
-    { firstName: 'Mang',   lastName: 'Inasal',    email: 'mang.inasal@example.com',     phone: '09123456789',street: '321 Elm St', city: 'Baguio', zipCode: '2000', password: 'password678', type: 'customer' },
-    { firstName: 'Kent',  lastName: 'Lopez',  email: 'kent.lopez@example.com',phone: '09123456781',  street: '654 Maple Dr', city: 'Cagayan de Oro', zipCode: '9000', password: 'password910', type: 'customer' },
-]);
-console.log('Users seeded:', users.length);
+    { firstName: 'Juan',  lastName: 'Dela Cruz',username: 'juandelacruz', email: 'juan.dela.cruz@example.com',phone: '09760156942',street: '123 Main St', city: 'Manila', zipCode: '1000', password: 'password123', type: 'customer' },
+    { firstName: 'Justin', lastName: 'Beiber', username: 'justinbeiber', email: 'justin.beiber@example.com',   phone: '09123456789',street: '456 Oak Ave', city: 'Cebu', zipCode: '6000', password: 'password234', type: 'customer' },
+    { firstName: 'Titus', lastName: 'Rodriguez', username: 'titusrodriguez',     email: 'titus.rodriguez@example.com',    phone: '09123456789',street: '789 Pine Rd', city: 'Davao', zipCode: '8000', password: 'password567', type: 'customer' },
+    { firstName: 'Mang',   lastName: 'Inasal', username: 'manginasal',    email: 'mang.inasal@example.com',     phone: '09123456789',street: '321 Elm St', city: 'Baguio', zipCode: '2000', password: 'password678', type: 'customer' },
+    { firstName: 'Kent',  lastName: 'Lopez', username: 'kentlopez',  email: 'kent.lopez@example.com',phone: '09123456781',  street: '654 Maple Dr', city: 'Cagayan de Oro', zipCode: '9000', password: 'password910', type: 'customer' },
+    { firstName: 'Admin', lastName: 'Baker', username: 'adminbaker', email: 'admin@bakehub.com', phone: '09000000000', street: '1 Baker St', city: 'Manila', zipCode: '1000', password: 'admin123', type: 'manager' },
+    ]);
+    console.log('Users seeded:', users.length);
 
 
     //Seed Carts
@@ -78,7 +79,15 @@ console.log('Users seeded:', users.length);
     ]);
     console.log('Carts seeded:', carts.length);
 
-
+    // Seed Reviews
+    const reviews = await Reviews.insertMany([
+        { productId: products[0]._id, userId: users[0]._id, rating: 5, comment: 'Amazing chocolate cake, very moist!' },
+        { productId: products[1]._id, userId: users[1]._id, rating: 4, comment: 'Croissant was very buttery and fresh.' },
+        { productId: products[2]._id, userId: users[2]._id, rating: 5, comment: 'Best blueberry muffin I have ever had!' },
+        { productId: products[3]._id, userId: users[3]._id, rating: 3, comment: 'Cookie was good but a bit too sweet.' },
+        { productId: products[4]._id, userId: users[4]._id, rating: 5, comment: 'Red velvet cupcake was absolutely perfect.' },
+    ]);
+    console.log('Reviews seeded:', reviews.length);
 
 
     mongoose.disconnect();
