@@ -1,11 +1,12 @@
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const { engine } = require('express-handlebars');
 const session = require('express-session'); 
 const app = express();
 
-// MongoDB connection
-mongoose.connect('mongodb://danieldabuit_db_user:1234@ac-75jwuwg-shard-00-00.emfl2fn.mongodb.net:27017,ac-75jwuwg-shard-00-01.emfl2fn.mongodb.net:27017,ac-75jwuwg-shard-00-02.emfl2fn.mongodb.net:27017/bakehubdb?ssl=true&replicaSet=atlas-14b2hv-shard-0&authSource=admin&appName=Cluster0')
+// MongoDB connection *change this to env file later
+mongoose.connect(process.env.MONGODB_URI)
   .then(() => console.log('MongoDB connected'))
   .catch(err => console.log(err));
 
@@ -19,7 +20,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static('public'));
 app.use(session({
-    secret: 'bakehub_secret',
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
 }));
@@ -31,6 +32,6 @@ app.use('/', require('./routes/user'));
 app.use('/',         require('./routes/index')); 
 
 // Start server
-app.listen(3000, () => {
-  console.log('Running on http://localhost:3000');
+app.listen(process.env.PORT, () => {
+  console.log(`Running on http://localhost:${process.env.PORT}`);
 });

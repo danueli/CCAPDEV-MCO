@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/danueli/CCAPDEV-MCO#readme",
   "dependencies": {
+    "dotenv": "^17.3.1",
     "express": "^4.22.1",
     "express-handlebars": "^8.0.6",
     "express-session": "^1.19.0",
