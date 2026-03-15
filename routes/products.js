@@ -4,7 +4,7 @@ const Product = require('../models/Product');
 
 router.get('/', async (req, res) => {
   try {
-    const products = await Product.find();
+    const products = await Product.find().lean();
     res.render('products', { 
       products, 
       username: req.query.username 
@@ -13,5 +13,7 @@ router.get('/', async (req, res) => {
     res.status(500).send(err.message);
   }
 });
+
+
 
 module.exports = router;

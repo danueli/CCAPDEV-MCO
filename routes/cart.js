@@ -4,7 +4,7 @@ const Cart = require('../models/Cart');
 const Product = require('../models/Product');
 const User = require('../models/User');
 
-// GET /cart/:username
+// get cart of a user based on their usernam
 router.get('/:username', async (req, res) => {
   try {
     const user = await User.findOne({ username: req.params.username }).lean();
@@ -15,7 +15,7 @@ router.get('/:username', async (req, res) => {
   }
 });
 
-// POST /cart/add/:username
+// posts cart item to the cart of a user based on their username
 router.post('/add/:username', async (req, res) => {
   try {
     const { productId, quantity } = req.body;
@@ -38,7 +38,7 @@ router.post('/add/:username', async (req, res) => {
   }
 });
 
-// POST /cart/remove/:username
+//  remove item from cart
 router.post('/remove/:username', async (req, res) => {
   try {
     const { productId } = req.body;
