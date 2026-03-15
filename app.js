@@ -1,8 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const { engine } = require('express-handlebars');
-const session = require('express-session'); // ← FIX 1: was missing require
-
+const session = require('express-session'); 
 const app = express();
 
 // MongoDB connection
