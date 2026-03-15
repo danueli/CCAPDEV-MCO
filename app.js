@@ -1,12 +1,11 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const { engine } = require('express-handlebars');
+const session = require('express-session'); // ← FIX 1: was missing require
 
 const app = express();
 
 // MongoDB connection
-// Kindly change the connection string by adding ur username and ps
-// Syntax: 'mongodb://<username>:<password>@ac----
 mongoose.connect('mongodb://danieldabuit_db_user:1234@ac-75jwuwg-shard-00-00.emfl2fn.mongodb.net:27017,ac-75jwuwg-shard-00-01.emfl2fn.mongodb.net:27017,ac-75jwuwg-shard-00-02.emfl2fn.mongodb.net:27017/bakehubdb?ssl=true&replicaSet=atlas-14b2hv-shard-0&authSource=admin&appName=Cluster0')
   .then(() => console.log('MongoDB connected'))
   .catch(err => console.log(err));
@@ -26,13 +25,11 @@ app.use(session({
     saveUninitialized: false,
 }));
 
-//Routes
-//app.use('/',         require('./routes/index'));
+// Routes
 app.use('/products', require('./routes/products'));
 app.use('/cart',     require('./routes/cart'));
-app.use('/users',    require('./routes/users'));
-//app.use('/reviews', require('./routes/reviews'));
-//app.use('/orders',   require('./routes/orders'));
+app.use('/', require('./routes/user'));
+app.use('/',         require('./routes/index')); 
 
 // Start server
 app.listen(3000, () => {

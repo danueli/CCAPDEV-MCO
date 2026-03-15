@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Bakehub | Products</title>
+    <link rel="icon" type="image/png" href="bakehub_favicon.png">
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+
+    <!-- Header -->
+    <header class="navbar">
+      <image src="search.png" height="75"></image>
+      <nav>
+        <a href="/">Home</a>
+        <a href="/catalog/{{username}}">Catalog</a>
+        <a href="/help">Help</a>
+        <a href="/cart/{{username}}">
+          <img src="cart-icon.png" alt="Cart" height="40">
+        </a>
+      </nav>
+    </header>
+
+    <!-- Heading -->
+    <h2 class="catalog-heading">Our Pastries</h2>
+    <p class="catalog-subheading">Click any item to see more details and reviews</p>
+
+    <!-- Search Bar -->
+    <div class="search-container">
+      <form method="GET" action="/search">
+        <input type="hidden" name="username" value="{{username}}">
+        <input type="text" name="q" placeholder="Search pastries..." class="search-input" value="{{query}}">
+        <button type="submit" class="search-btn">Search</button>
+      </form>
+    </div>
+
+    <!-- Product Grid -->
+    <div class="product-container">
+      {{#each products}}
+        <div class="product-box">
+
+          <!-- Click image/name to go to product detail -->
+          <a href="/products/{{this._id}}?username={{../username}}">
+            <img src="{{this.image}}" alt="{{this.name}}" class="product-img">
+            <div class="card-overlay">
+              <h3>{{this.name}}</h3>
+              <p>{{this.description}}</p>
+              <p class="price">₱{{this.price}}</p>
+              <p class="stock">Stock: {{this.stock}}</p>
+            </div>
+          </a>
+
+          <!-- Add to Cart form -->
+          <form method="POST" action="/cart/add/{{../username}}">
+            <input type="hidden" name="productId" value="{{this._id}}">
+            <input type="number" name="quantity" value="1" min="1" max="{{this.stock}}">
+            <button type="submit" class="add-to-cart-btn">Add to Cart</button>
+          </form>
+
+        </div>
+      {{else}}
+        <p>No products found.</p>
+      {{/each}}
+    </div>
+
+    <footer class="footer">
+      <p>CCAPDEV S12 Team Gardenia</p>
+    </footer>
+
+  </body>
+</html>

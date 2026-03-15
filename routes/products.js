@@ -1,7 +1,17 @@
 const express = require('express');
 const router = express.Router();
-const productController = require('../controllers/productController');
+const Product = require('../models/Product');
 
-router.get('/', productController.getAllProducts);
+router.get('/', async (req, res) => {
+  try {
+    const products = await Product.find();
+    res.render('products', { 
+      products, 
+      username: req.query.username 
+    });
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+});
 
 module.exports = router;

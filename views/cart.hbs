@@ -12,7 +12,7 @@
     <image src="search.png" height="75"></image>
     <nav>
       <a href="/">Home</a>
-      <a href="/catalog">Catalog</a>
+      <a href="/catalog/{{username}}">Catalog</a>
       <a href="/help">Help</a>
     </nav>
   </header>
@@ -29,11 +29,10 @@
             <div>
               <h3>{{this.productId.name}}</h3>
               <p>₱{{this.productId.price}} x {{this.quantity}}</p>
-              <p>Subtotal: ₱{{this.productId.price}}</p>
             </div>
 
             <!-- Remove button -->
-            <form method="POST" action="/cart/remove/{{../cart.userId}}">
+            <form method="POST" action="/cart/remove/{{../username}}">
               <input type="hidden" name="productId" value="{{this.productId._id}}">
               <button type="submit">Remove</button>
             </form>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Bakehub | Catalog</title>
+    <link rel="icon" type="image/png" href="bakehub_favicon.png">
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+
+    <!-- Header -->
+    <header class="navbar">
+      <image src="search.png" height="75"></image>
+      <nav>
+        <a href="/main/{{username}}">Home</a>
+        <a href="/help">Help</a>
+        <a href="/s_signup">Signup as Seller</a>
+        <a href="/cart/{{username}}">
+          <img src="cart-icon.png" alt="Cart" height="40">
+        </a>
+      </nav>
+    </header>
+
+    <!-- Catalog Heading -->
+    <h2 class="catalog-heading">Our Pastries</h2>
+    <p class="catalog-subheading">Click any item to see reviews</p>
+
+    <!-- Product Grid -->
+    <div class="product-container">
+      {{#each products}}
+        <a href="/products/{{this._id}}?username={{../username}}" class="product-box">
+          <img src="{{this.image}}" alt="{{this.name}}" class="product-img">
+          <div class="card-overlay">
+            <h3>{{this.name}}</h3>
+            <p>{{this.description}}</p>
+            <div class="stars">★★★★★</div>
+          </div>
+        </a>
+      {{else}}
+        <p>No products available.</p>
+      {{/each}}
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p>CCAPDEV S12 Team Gardenia</p>
+    </footer>
+
+  </body>
+</html>
