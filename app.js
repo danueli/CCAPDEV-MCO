@@ -26,6 +26,7 @@ app.use(session({
 }));
 
 // Routes
+app.use('/products', require('./routes/products'));
 app.use('/cart',     require('./routes/cart'));
 app.use('/', require('./routes/user'));
 app.use('/',         require('./routes/index')); 
