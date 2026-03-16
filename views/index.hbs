@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Bakehub | Home</title>
+    <link rel="icon" type="image/png" href="/bakehub_favicon.png">
+    <link rel="stylesheet" href="/style.css">
+    <style>
+      .home-product-card {
+        background-color: #fff;
+        padding: 20px;
+        width: 150px;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        color: #333;
+        position: static;
+        overflow: visible;
+        cursor: default;
+      }
+
+      .home-product-card h3 {
+        font-size: 0.95rem;
+        margin-bottom: 8px;
+        color: #4b2e2e;
+      }
+
+      .home-product-card .price {
+        color: #8b5e3c;
+        font-weight: bold;
+        font-size: 0.9rem;
+        margin-bottom: 4px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Header -->
+    <header class="navbar">
+      <image src="/bakehub_bg.png" height="75"></image>
+      <nav>
+        <a href="/main/{{username}}">Home</a>
+        <a href="/catalog/{{username}}">Catalog</a>
+        <a href="/help">Help</a>
+        <a href="/login">Logout</a>
+        <a href="/profile/{{username}}">Profile</a>
+        {{#if isManager}}
+          <a href="/products/add?username={{username}}">Add Product</a>
+        {{/if}}
+        <a href="/cart/{{username}}">
+          <img src="/cart-icon.png" alt="Cart" height="40">
+        </a>
+      </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <h2>Welcome to Bakehub, {{username}}!</h2>
+      <p>Order your favorite pastries here!</p>
+
+      <!-- Search Bar -->
+      <div class="search-container">
+        <form method="GET" action="/search">
+          <input type="hidden" name="username" value="{{username}}">
+          <input type="text" name="q" placeholder="Search pastries..." class="search-input">
+          <button type="submit" class="search-btn">Search</button>
+        </form>
+      </div>
+
+      <!-- Products from DB -->
+      <div class="products">
+        {{#each products}}
+          <div class="home-product-card">
+            <img src="/{{this.image}}" alt="{{this.name}}" height="80">
+            <h3>{{this.name}}</h3>
+            <p class="price">₱{{this.price}}</p>
+            <form method="POST" action="/cart/add/{{../username}}">
+              <input type="hidden" name="productId" value="{{this._id}}">
+              <input type="hidden" name="quantity" value="1">
+              <button type="submit" class="add-to-cart-btn">Add to Cart</button>
+            </form>
+          </div>
+        {{/each}}
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p>CCAPDEV S12 Team Gardenia</p>
+    </footer>
+
+  </body>
+</html>
