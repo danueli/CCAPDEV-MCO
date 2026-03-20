@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const Product = require('../models/Product');
 const User = require('../models/User'); 
+const Cart = require('/..models/Cart');
+
 
 router.get('/', (req, res) => {
   res.redirect('/login');
@@ -37,3 +39,34 @@ router.get('/search', async (req, res) => {
 });
 
 module.exports = router;
+
+router.get('/checkout/:username', async (req, res) => {
+    try {
+        const username = req.params.username;
+        const user = await User.findOne({ username }).lean();
+
+        // fetch cart items
+        const cartItems = await Cart.find({ username }).lean();
+
+        // get total
+        let total = 0;
+        const formattedItems = cartItems.map(item => {
+            const itemTotal = item.price * item.quantity;
+            total += itemTotal;
+            return {
+                name: item.name,
+                quantity: item.quantity,
+                itemTotal: itemTotal.toFixed(2)
+            };
+        });
+
+        res.render('checkout', {
+            user,
+            cartItems: formattedItems,
+            total: total.toFixed(2)
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send(err.message);
+    }
+});
