@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Product = require('../models/Product');
 const User = require('../models/User'); 
-const Cart = require('/..models/Cart');
+const Cart = require('../models/Cart');
 
 
 router.get('/', (req, res) => {
