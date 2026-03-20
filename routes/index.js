@@ -96,8 +96,13 @@ router.post('/checkout/:username', async (req, res) => {
         // Clear user's cart
         await Cart.deleteOne({ userId: user._id });
 
-        // Redirect to main emnu
-        res.redirect(`/main/${username}`);
+        // Confirmation then redirect to main menu
+        res.send(`
+            <script>
+                alert("Your order has been placed.");
+                window.location.href = "/main/${username}";
+            </script>
+        `);
 
     } catch (err) {
         console.error(err);
