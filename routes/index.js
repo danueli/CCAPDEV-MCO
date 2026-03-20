@@ -38,35 +38,71 @@ router.get('/search', async (req, res) => {
   res.render('catalog', { products, username, query: q });
 });
 
-module.exports = router;
-
+//  Checkout Logic
 router.get('/checkout/:username', async (req, res) => {
     try {
         const username = req.params.username;
         const user = await User.findOne({ username }).lean();
+        if (!user) return res.status(404).send("User not found");
 
-        // fetch cart items
-        const cartItems = await Cart.find({ username }).lean();
-
-        // get total
+        const cart = await Cart.findOne({ userId: user._id }).populate('items.productId').lean();
+        let cartItems = [];
         let total = 0;
-        const formattedItems = cartItems.map(item => {
-            const itemTotal = item.price * item.quantity;
-            total += itemTotal;
-            return {
-                name: item.name,
-                quantity: item.quantity,
-                itemTotal: itemTotal.toFixed(2)
-            };
-        });
+
+        if (cart && cart.items.length > 0) {
+            cartItems = cart.items.map(item => {
+                const product = item.productId;
+                if (!product) return null;
+                const name = product.name;
+                const price = product.price || 0;
+                const itemTotal = price * item.quantity;
+                total += itemTotal;
+                return {
+                    name,
+                    quantity: item.quantity,
+                    itemTotal: itemTotal.toFixed(2)
+                };
+            }).filter(Boolean);
+        }
 
         res.render('checkout', {
             user,
-            cartItems: formattedItems,
+            cartItems,
             total: total.toFixed(2)
         });
+
     } catch (err) {
         console.error(err);
         res.status(500).send(err.message);
     }
 });
+
+// Post Checkout Logic
+router.post('/checkout/:username', async (req, res) => {
+    try {
+        const username = req.params.username;
+
+        // Get user
+        const user = await User.findOne({ username });
+        if (!user) return res.status(404).send("User not found");
+
+        // Get user's cart info
+        const cart = await Cart.findOne({ userId: user._id }).populate('items.productId');
+
+        if (!cart || cart.items.length === 0) {
+            return res.status(400).send("Cart is empty");
+        }
+
+        // Clear user's cart
+        await Cart.deleteOne({ userId: user._id });
+
+        // Redirect to main emnu
+        res.redirect(`/main/${username}`);
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).send(err.message);
+    }
+});
+
+module.exports = router;
