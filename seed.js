@@ -90,8 +90,18 @@ function computeTotal(items, products) {
     ]);
     console.log('Reviews seeded:', reviews.length);
 
-    // Seed Orders (if user checked out items in cart)
+    // Seed Orders (if user checked out items in cart: TO BE FIXED LATER)
     
+    const orders = await Order.insertMany([
+       { userId: users[0]._id, items: cartOne, totalPrice: computeTotal(cartOne, products), status: 'Pending'},
+       { userId: users[1]._id, items: cartTwo, totalPrice: computeTotal(cartTwo, products), status: 'Pending'},
+       { userId: users[2]._id, items: cartThree, totalPrice: computeTotal(cartThree, products), status: 'Pending'},
+       { userId: users[3]._id, items: cartFour, totalPrice: computeTotal(cartFour, products), status: 'Pending'},
+       { userId: users[4]._id, items: cartFive, totalPrice: computeTotal(cartFive, products), status: 'Pending'},
+    ]);
+
+    console.log('Orders seeded:', orders.length);
+     
 
 
     mongoose.disconnect();

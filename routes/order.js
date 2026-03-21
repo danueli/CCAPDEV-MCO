@@ -8,14 +8,14 @@ const product = require('../models/Product');
 router.get('/:username', async (req, res) => {
   try {
     const user = await User.findOne({ username: req.params.username }).lean();
-    const cart = await Cart.findOne({ userId: user._id }).populate('items.productId').lean();
-    res.render('cart', { cart, username: req.params.username });
+    const order = await Order.findOne({ userId: user._id }).populate('items.productId').lean();
+    res.render('order', { order, username: req.params.username });
   } catch (err) {
     res.status(500).send(err.message);
   }
 });
 
-// posts items to the order list based on command by the user
+// posts cart item to the cart of a user based on their username
 
 
 
