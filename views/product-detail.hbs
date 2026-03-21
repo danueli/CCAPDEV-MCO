@@ -2,8 +2,8 @@
 <html>
 <head>
     <title>Bakehub | Reviews</title>
-    <link rel="icon" type="image/png" href="bakehub_favicon.png">
-    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" href="/bakehub_favicon.png">
+    <link rel="stylesheet" href="/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
     
     <style>
@@ -314,13 +314,13 @@
 <body>
 <!-- Header -->
 <header class="navbar">
-    <image src="search.png" height="75"></image>
+    <image src="/search.png" height="75"></image>
     <nav>
-        <a href="index.html">Home</a>
-        <a href="catalog.html">Catalog</a>
+        <a href="/index/{{userName}}">Home</a>
+        <a href="/catalog/{{userName}}">Catalog</a>
         <a href="help.html">Help</a>
         <a href="login.html" id="logout-link">Logout</a>
-        <a href="add_product.html" id="add-product-link" style="display:none;">Add Product</a>
+        <a href="/add_product/{{userName}}" id="add-product-link" style="display:none;">Add Product</a>
         <a href="profile.html" id="profile-link">Profile</a>
 
         <input type="checkbox" id="cart-toggle" class="cart-toggle">
