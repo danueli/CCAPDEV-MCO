@@ -90,6 +90,9 @@ function computeTotal(items, products) {
     ]);
     console.log('Reviews seeded:', reviews.length);
 
+    // Seed Orders (if user checked out items in cart)
+    
+
 
     mongoose.disconnect();
     console.log('Disconnected.');
