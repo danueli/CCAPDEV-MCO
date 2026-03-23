@@ -1,0 +1,157 @@
+<!-- Header -->
+<header class="navbar">
+  <image src="/bakehub_bg.png" height="75"></image>
+  <nav>
+    <a href="/main/{{username}}">Home</a>
+    <a href="/catalog/{{username}}">Catalog</a>
+    <a href="/help">Help</a>
+    <a href="/login">Logout</a>
+    <a href="/profile/{{username}}">Profile</a>
+    {{#if isManager}}
+      <a href="/products/add?username={{username}}">Add Product</a>
+    {{/if}}
+    <a href="/cart/{{username}}">
+      <img src="/cart-icon.png" alt="Cart" height="40">
+    </a>
+  </nav>
+</header>
+
+<!-- Main Content -->
+<main class="main-content">
+    <div class="profile-wrapper">
+        {{#if user}}
+            <!-- Profile content (shown when logged in) -->
+            <div id="profile-content">
+                <!-- Hero -->
+                <div class="profile-hero">
+                    <div class="profile-avatar" id="profile-avatar">{{user.firstName.[0]}}</div>
+                    <div class="profile-hero-info">
+                        <h1 id="profile-username">{{user.firstName}} {{user.lastName}}</h1>
+                        <span class="role-badge" id="profile-role-badge">{{user.type}}</span>
+                    </div>
+                </div>
+
+                <!-- Tabs -->
+                <div class="profile-tabs" id="profile-tabs">
+                    <button class="tab-btn active" data-tab="overview">Overview</button>
+                    <button class="tab-btn" data-tab="settings">Settings</button>
+                </div>
+
+                <!-- Overview Tab -->
+                <div class="tab-panel active" id="tab-overview">
+                    <div class="profile-card">
+                        <h3>Account Info</h3>
+                        <div class="info-row">
+                            <span class="info-label">Username</span>
+                            <span class="info-value" id="ov-username">{{user.username}}</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Email</span>
+                            <span class="info-value" id="ov-email">{{user.email}}</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Phone</span>
+                            <span class="info-value" id="ov-phone">{{user.phone}}</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Role</span>
+                            <span class="info-value" id="ov-role">{{user.type}}</span>
+                        </div>
+                    </div>
+
+                    <div class="profile-card">
+                        <h3>Address Information</h3>
+                        <div class="info-row">
+                            <span class="info-label">Street</span>
+                            <span class="info-value" id="ov-street">{{user.street}}</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">City</span>
+                            <span class="info-value" id="ov-city">{{user.city}}</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Province</span>
+                            <span class="info-value" id="ov-province">{{user.province}}</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Zip Code</span>
+                            <span class="info-value" id="ov-zip">{{user.zip}}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Settings Tab -->
+                <div class="tab-panel" id="tab-settings">
+                    <div class="profile-card">
+                        <h3>Edit Profile</h3>
+                        <form action="/profile/{{username}}/edit" method="POST" class="settings-form">
+                            <div class="form-group">
+                                <label>First Name</label>
+                                <input type="text" name="firstName" placeholder="First name" value="{{user.firstName}}" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Last Name</label>
+                                <input type="text" name="lastName" placeholder="Last name" value="{{user.lastName}}" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="email" name="email" placeholder="Email" value="{{user.email}}" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Phone</label>
+                                <input type="tel" name="phone" placeholder="Phone number" value="{{user.phone}}">
+                            </div>
+                            <div class="form-group">
+                                <label>Street</label>
+                                <input type="text" name="street" placeholder="Street address" value="{{user.street}}">
+                            </div>
+                            <div class="form-group">
+                                <label>City</label>
+                                <input type="text" name="city" placeholder="City" value="{{user.city}}">
+                            </div>
+                            <div class="form-group">
+                                <label>Province</label>
+                                <input type="text" name="province" placeholder="Province" value="{{user.province}}">
+                            </div>
+                            <div class="form-group">
+                                <label>Zip Code</label>
+                                <input type="text" name="zip" placeholder="Zip code" value="{{user.zip}}">
+                            </div>
+                            <button type="submit" class="btn-submit">Save Changes</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        {{else}}
+            <!-- Not logged in fallback -->
+            <div id="not-logged-in">
+                <h2>You're not logged in</h2>
+                <p>Please <a href="/login">log in</a> to view your profile.</p>
+            </div>
+        {{/if}}
+    </div>
+</main>
+
+<!-- Footer -->
+<footer class="footer">
+    <p>CCAPDEV S12 Team Gardenia</p>
+</footer>
+
+<script>
+    // Tab switching functionality
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const tabName = e.target.dataset.tab;
+            
+            // Remove active class from all buttons
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            e.target.classList.add('active');
+            
+            // Hide all panels
+            document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+            
+            // Show selected panel
+            document.getElementById(`tab-${tabName}`).classList.add('active');
+        });
+    });
+</script>

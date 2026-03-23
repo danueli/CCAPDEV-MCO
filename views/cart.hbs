@@ -9,11 +9,19 @@
 
   <!-- Header -->
   <header class="navbar">
-    <image src="/search.png" height="75"></image>
+    <image src="/bakehub_bg.png" height="75"></image>
     <nav>
       <a href="/main/{{username}}">Home</a>
       <a href="/catalog/{{username}}">Catalog</a>
       <a href="/help">Help</a>
+      <a href="/login">Logout</a>
+      <a href="/profile/{{username}}">Profile</a>
+      {{#if isManager}}
+        <a href="/products/add?username={{username}}">Add Product</a>
+      {{/if}}
+      <a href="/cart/{{username}}">
+        <img src="/cart-icon.png" alt="Cart" height="40">
+      </a>
     </nav>
   </header>
 
@@ -31,11 +39,19 @@
               <p>₱{{this.productId.price}} x {{this.quantity}}</p>
             </div>
 
-            <!-- Remove button -->
-            <form method="POST" action="/cart/remove/{{../username}}">
-              <input type="hidden" name="productId" value="{{this.productId._id}}">
-              <button type="submit">Remove</button>
-            </form>
+            <div class="cart-actions">
+              <form method="POST" action="/cart/update/{{../username}}" class="qty-form">
+                <input type="hidden" name="productId" value="{{this.productId._id}}">
+                <button type="submit" name="delta" value="-1">-</button>
+                <span>{{this.quantity}}</span>
+                <button type="submit" name="delta" value="1">+</button>
+              </form>
+
+              <form method="POST" action="/cart/remove/{{../username}}">
+                <input type="hidden" name="productId" value="{{this.productId._id}}">
+                <button type="submit">Remove</button>
+              </form>
+            </div>
           </div>
         {{/each}}
       </div>

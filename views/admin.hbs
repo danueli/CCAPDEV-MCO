@@ -1,0 +1,87 @@
+<main class="main-content">
+    <!-- Admin Profile -->
+    <div class="profile-wrapper">
+
+        <div class="profile-hero">
+            <div class="profile-avatar">A</div>
+
+            <div class="profile-hero-info">
+                <h1>Admin Dashboard</h1>
+                <span class="role-badge">Administrator</span>
+            </div>
+        </div>
+
+        <!-- Dashboard Cards -->
+        <div style="
+            display:grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap:24px;
+            margin-top:24px;
+        ">
+
+            <!-- List of Users -->
+            <div class="profile-card">
+                <h3>All Users</h3>
+                <div id="users-list">
+                    {{#if users}}
+                        {{#each users}}
+                            <div class="info-row">
+                                <span class="info-label">{{username}}</span>
+                                <span class="info-value">{{firstName}} {{lastName}}</span>
+                            </div>
+                        {{/each}}
+                    {{else}}
+                        <div class="info-row">
+                            <span class="info-value">No users found</span>
+                        </div>
+                    {{/if}}
+                </div>
+            </div>
+
+            <!-- List of Managers/Sellers Box -->
+            <div class="profile-card">
+                <h3>All Managers</h3>
+                <div id="managers-list">
+                    {{#if managers}}
+                        {{#each managers}}
+                            <div class="info-row">
+                                <span class="info-label">{{username}}</span>
+                                <span class="info-value">{{firstName}} {{lastName}}</span>
+                            </div>
+                        {{/each}}
+                    {{else}}
+                        <div class="info-row">
+                            <span class="info-value">No managers found</span>
+                        </div>
+                    {{/if}}
+                </div>
+            </div>
+
+            <!-- Statistics -->
+            <div class="profile-card">
+                <h3>Statistics</h3>
+
+                <div class="info-row">
+                    <span class="info-label">Total Users</span>
+                    <span class="info-value" id="total-users">{{totalUsers}}</span>
+                </div>
+
+                <div class="info-row">
+                    <span class="info-label">Total Managers</span>
+                    <span class="info-value" id="total-managers">{{totalManagers}}</span>
+                </div>
+
+                <div class="info-row">
+                    <span class="info-label">Total Products</span>
+                    <span class="info-value" id="total-products">{{totalProducts}}</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</main>
+
+<!-- Footer -->
+<footer class="footer">
+    <p>CCAPDEV S12 Team Gardenia</p>
+</footer>

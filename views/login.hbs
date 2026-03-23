@@ -21,7 +21,7 @@
         <div class = "login-card" id = "login-card">
            <h2 class = "login title"> Login to your account</h2> <br>
            
-            <form>
+            <form method="POST" action="/login">
                 <div class = "input-container">
                       <label for="username">Username:</label>
                       <input type="username" id="username" name="username" required> <br><br>
@@ -32,9 +32,8 @@
                 <button type="submit" class="submit">Login</button>
             </form>
              <div class = "signup-options"> 
-               <a href = "c_signup.html" class ="c_signup" id ="c_signup">Don't have an account?</a>
-               <a href = "s_login.html" class = "s_login" id = "s_login">Seller Login</a> </div>
-              
+               <a href = "/signup" class ="c_signup" id ="c_signup">Don't have an account?</a>
+               <a href = "/s_login" class = "s_login" id = "s_login">Seller Login</a> </div>
           </div>
     </main>
 

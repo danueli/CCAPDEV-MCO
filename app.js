@@ -5,13 +5,53 @@ const { engine } = require('express-handlebars');
 const session = require('express-session'); 
 const app = express();
 
-// MongoDB connection *change this to env file later
-mongoose.connect(process.env.MONGODB_URI)
-  .then(() => console.log('MongoDB connected'))
+// Env fallback with defaults
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/bakehub';
+const SESSION_SECRET = process.env.SESSION_SECRET || 'change_me_in_production';
+const PORT = parseInt(process.env.PORT, 10) || 3000;
+
+// MongoDB connection
+mongoose.connect(MONGODB_URI)
+  .then(() => console.log(`MongoDB connected`))
   .catch(err => console.log(err));
 
-// view engine setup
-app.engine('hbs', engine({ extname: '.hbs' }));
+// view engine setup with custom helpers
+const hbs = engine({
+  extname: '.hbs',
+  helpers: {
+    // Comparison helpers
+    eq: (a, b) => a === b,
+    ne: (a, b) => a !== b,
+    lt: (a, b) => a < b,
+    lte: (a, b) => a <= b,
+    gt: (a, b) => a > b,
+    gte: (a, b) => a >= b,
+    and: (...args) => args.slice(0, -1).every(Boolean),
+    or: (...args) => args.slice(0, -1).some(Boolean),
+    // Math helpers
+    sub: (a, b) => a - b,
+    add: (a, b) => a + b,
+    mul: (a, b) => a * b,
+    // String/Array helpers
+    repeat: function(count, options) {
+      let result = '';
+      for (let i = 0; i < count; i++) {
+        result += options.fn(this);
+      }
+      return result;
+    },
+    formatDate: (date) => {
+      if (!date) return '';
+      return new Date(date).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+      });
+    }
+  }
+});
+
+app.engine('hbs', hbs);
 app.set('view engine', 'hbs');
 app.set('views', './views');
 
@@ -20,7 +60,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static('public'));
 app.use(session({
-    secret: process.env.SESSION_SECRET,
+    secret: SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
 }));
@@ -31,7 +71,8 @@ app.use('/cart',     require('./routes/cart'));
 app.use('/', require('./routes/user'));
 app.use('/',         require('./routes/index')); 
 
+
 // Start server
-app.listen(process.env.PORT, () => {
-  console.log(`Running on http://localhost:${process.env.PORT}`);
+app.listen(PORT, () => {
+  console.log(`Running on http://localhost:${PORT}`);
 });

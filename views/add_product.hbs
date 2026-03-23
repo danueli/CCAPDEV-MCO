@@ -1,0 +1,37 @@
+<br><br>
+
+<main class="login">
+    <div class="login-card" id="login-card">
+        <h2 class="login title">Add a New Product</h2><br>
+
+        <form action="/products/add" method="POST" class="add-product-form">
+            <div class="input-container">
+                <label for="product-name">Product Name:</label>
+                <input type="text" id="product-name" name="name" placeholder="Input food item" required><br><br>
+
+                <label for="product-price">Product Price(₱):</label>
+                <input type="number" id="product-price" name="price" min="0.01" step="0.01" placeholder="Place price in ₱" required><br><br>
+
+                <label for="product-category">Category:</label>
+                <input type="text" id="product-category" name="category" placeholder="e.g., Cake, Cookie, Bread" required><br><br>
+
+                <label for="product-stock">Stock:</label>
+                <input type="number" id="product-stock" name="stock" min="0" placeholder="Available quantity" required><br><br>
+
+                <label for="product-description">Description:</label>
+                <textarea id="product-description" name="description" placeholder="Product description" rows="4" required></textarea><br><br>
+
+                <label for="product-image">Image URL:</label>
+                <input type="url" id="product-image" name="image" placeholder="https://example.com/image.jpg" required><br><br>
+
+                <input type="hidden" name="username" value="{{username}}">
+            </div>
+            <button type="submit" class="submit">Add Product</button>
+        </form>
+    </div>
+</main>
+
+<!-- Footer -->
+<footer class="footer">
+    <p>CCAPDEV S12 Team Gardenia</p>
+</footer>

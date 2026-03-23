@@ -72,7 +72,7 @@
             <img src="/{{this.image}}" alt="{{this.name}}" height="80">
             <h3>{{this.name}}</h3>
             <p class="price">₱{{this.price}}</p>
-            <form method="POST" action="/cart/add/{{../username}}">
+            <form method="POST" action="/cart/add/{{../username}}" class="add-to-cart-form">
               <input type="hidden" name="productId" value="{{this._id}}">
               <input type="hidden" name="quantity" value="1">
               <button type="submit" class="add-to-cart-btn">Add to Cart</button>
@@ -87,5 +87,6 @@
       <p>CCAPDEV S12 Team Gardenia</p>
     </footer>
 
+    <script src="/script.js"></script>
   </body>
 </html>

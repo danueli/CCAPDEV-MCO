@@ -76,6 +76,35 @@ router.get('/s_signup', (req, res) => {
     res.render('s_signup');
 });
 
+// (create new seller/manager)
+router.post('/s_signup', async (req, res) => {
+    try {
+        const { firstName, lastName, username, email, phone, password } = req.body;
+
+        // Check if username already exists
+        const existing = await User.findOne({ username });
+        if (existing) {
+            return res.render('s_signup', { error: 'Username already taken' });
+        }
+
+        const newUser = new User({
+            firstName,
+            lastName,
+            username,
+            email,
+            phone,
+            password,
+            type: 'manager'
+        });
+
+        await newUser.save();
+        res.redirect(`/main/${username}`);
+
+    } catch (err) {
+        res.status(500).send(err.message);
+    }
+});
+
 // get profile page
 router.get('/profile/:username', async (req, res) => {
     try {

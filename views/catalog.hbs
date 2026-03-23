@@ -9,11 +9,16 @@
 
     <!-- Header -->
     <header class="navbar">
-      <image src="/search.png" height="75"></image>
+      <image src="/bakehub_bg.png" height="75"></image>
       <nav>
         <a href="/main/{{username}}">Home</a>
+        <a href="/catalog/{{username}}">Catalog</a>
         <a href="/help">Help</a>
-        <a href="/s_signup">Signup as Seller</a>
+        <a href="/login">Logout</a>
+        <a href="/profile/{{username}}">Profile</a>
+        {{#if isManager}}
+          <a href="/products/add?username={{username}}">Add Product</a>
+        {{/if}}
         <a href="/cart/{{username}}">
           <img src="/cart-icon.png" alt="Cart" height="40">
         </a>
@@ -23,6 +28,14 @@
     <!-- Catalog Heading -->
     <h2 class="catalog-heading">Our Pastries</h2>
     <p class="catalog-subheading">Click any item to see reviews</p>
+
+    <!-- Category Filters -->
+    <div class="category-filter" style="margin: 18px 0; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+      <a href="/catalog/{{username}}" class="category-pill {{#if (eq selectedCategory 'All')}}active{{/if}}">All</a>
+      {{#each categories}}
+        <a href="/catalog/{{../username}}?category={{this}}" class="category-pill {{#if (eq this ../selectedCategory)}}active{{/if}}">{{this}}</a>
+      {{/each}}
+    </div>
 
     <!-- Product Grid -->
     <div class="product-container">

@@ -25,8 +25,21 @@ router.get('/main/:username', async (req, res) => {
 
 router.get('/catalog/:username', async (req, res) => {
   try {
-    const products = await Product.find().lean();
-    res.render('catalog', { products, username: req.params.username });
+    const allProducts = await Product.find().lean();
+    const category = req.query.category;
+
+    const products = category
+      ? allProducts.filter(product => product.category && product.category.toLowerCase() === category.toLowerCase())
+      : allProducts;
+
+    const categories = [...new Set(allProducts.map(p => p.category).filter(Boolean))];
+
+    res.render('catalog', {
+      products,
+      categories,
+      selectedCategory: category || 'All',
+      username: req.params.username
+    });
   } catch (err) {
     res.status(500).send(err.message);
   }
@@ -36,6 +49,30 @@ router.get('/search', async (req, res) => {
   const { q, username } = req.query;
   const products = await Product.find({ name: { $regex: q, $options: 'i' } }).lean();
   res.render('catalog', { products, username, query: q });
+});
+
+// Help route
+router.get('/help', (req, res) => {
+  res.render('help', { username: req.query.username });
+});
+
+// Admin dashboard route
+router.get('/admin', async (req, res) => {
+  try {
+    const users = await User.find({ type: 'customer' }).lean();
+    const managers = await User.find({ type: 'manager' }).lean();
+    const products = await Product.find().lean();
+
+    res.render('admin', {
+      users,
+      managers,
+      totalUsers: users.length,
+      totalManagers: managers.length,
+      totalProducts: products.length
+    });
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
 });
 
 //  Checkout Logic

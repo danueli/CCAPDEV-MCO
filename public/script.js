@@ -1,147 +1,91 @@
 // Cart Function Commands
+// This app now persists cart entirely in MongoDB; client localStorage cart is deprecated.
+
 document.addEventListener('DOMContentLoaded', () => {
+    const addToCartForms = document.querySelectorAll('.add-to-cart-form');
 
-    // Load cart from localStorage on every page load (restores after Back to Menu or login)
-    function getCartKey() {
-        const session = JSON.parse(localStorage.getItem('bakehubSession') || 'null');
-        return session ? 'bakehubCart_' + session.username : 'bakehubCart_guest';
-    }
+    addToCartForms.forEach(form => {
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const url = form.getAttribute('action');
+            const body = new URLSearchParams(new FormData(form)).toString();
 
-    function loadCart() {
-        return JSON.parse(localStorage.getItem(getCartKey()) || '[]');
-    }
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body
+                });
 
-    function saveCart() {
-        localStorage.setItem(getCartKey(), JSON.stringify(cart));
-    }
+                if (!response.ok) {
+                    const text = await response.text();
+                    throw new Error(text || 'Server error');
+                }
 
-    let cart = loadCart();
-    const cartItemsContainer = document.querySelector('.cart-items');
-    const cartTotalElement = document.querySelector('.cart-total span:last-child');
-    const cartCountElement = document.querySelector('.cart-count');
-    const addToCartButtons = document.querySelectorAll('.add-to-cart-btn');
-
-
-    function addToCart(name, price) {
-        const existingItem = cart.find(item => item.name === name);
-
-        if (existingItem) {
-            existingItem.quantity += 1;
-        } else {
-            cart.push({
-                name: name,
-                price: parseFloat(price),
-                quantity: 1
-            });
-        }
-        saveCart();
-        renderCart();
-    }
-
-    function removeFromCart(index) {
-        cart.splice(index, 1);
-        saveCart();
-        renderCart();
-    }
-
-    function updateQuantity(index, change) {
-        cart[index].quantity += change;
-
-        if (cart[index].quantity <= 0) {
-            cart.splice(index, 1);
-        }
-        saveCart();
-        renderCart();
-    }
-
-    function renderCart() {
-        cartItemsContainer.innerHTML = '';
-        let total = 0;
-        let totalCount = 0;
-
-        if (cart.length === 0) {
-            cartItemsContainer.innerHTML = `
-                <div class="empty-cart">
-                    <div class="empty-cart-icon"><img src="cart-icon.png" alt="Cart Icon" style="width:50px;"></div>
-                    <p>Your cart is empty</p>
-                </div>`;
-        } else {
-            cart.forEach((item, index) => {
-                total += item.price * item.quantity;
-                totalCount += item.quantity;
-
-                const cartItem = document.createElement('div');
-                cartItem.classList.add('cart-item');
-                cartItem.innerHTML = `
-                    <div class="item-details">
-                        <span class="item-name">${item.name}</span>
-                        <span class="item-price">₱${item.price.toFixed(2)}</span>
-                        <div class="item-quantity">
-                            <button class="qty-btn" onclick="changeQty(${index}, -1)">-</button>
-                            <span>${item.quantity}</span>
-                            <button class="qty-btn" onclick="changeQty(${index}, 1)">+</button>
-                        </div>
-                    </div>
-                    <button class="remove-btn" onclick="removeItem(${index})">Remove</button>
-                `;
-                cartItemsContainer.appendChild(cartItem);
-            });
-        }
-
-        cartTotalElement.textContent = total.toFixed(2);
-        cartCountElement.textContent = totalCount;
-    }
-
-    // Attach Add to Cart for hardcoded product cards
-    addToCartButtons.forEach(button => {
-        button.addEventListener('click', (e) => {
-            const card = e.target.closest('.product-card');
-            const name = card.getAttribute('data-name');
-            const price = card.getAttribute('data-price');
-            addToCart(name, price);
-            document.getElementById('cart-toggle').checked = true;
-        });
-    });
-
-    // Make functions global so HTML onclick attributes can see them
-    window.removeItem = removeFromCart;
-    window.changeQty = updateQuantity;
-
-    // Checkout Logic
-    const checkoutBtn = document.querySelector('.checkout-btn');
-    if (checkoutBtn) {
-        checkoutBtn.addEventListener('click', () => {
-            if (cart.length === 0) {
-                alert("Your cart is empty! Add some delicious pastries first.");
-                return;
+                const data = await response.json();
+                if (data.success) {
+                    if (data.cartCount !== undefined) {
+                        updateCartCount(data.cartCount);
+                    }
+                    showToast(data.message || 'Added to cart', 'success');
+                } else {
+                    showToast(data.error || 'Unable to add to cart', 'error');
+                }
+            } catch (err) {
+                showToast(`Add to cart failed: ${err.message}`, 'error');
             }
-            window.location.href = 'checkout.html';
         });
-    }
-
-    // Render cart immediately on load to restore saved items
-    if (cartItemsContainer) renderCart();
-
-    // Show seller nav link if logged in as seller
-    const session = getSession();
-    const addProductLink = document.getElementById('add-product-link');
-    if (addProductLink && session && session.role === 'seller') {
-        addProductLink.style.display = 'inline';
-    }
-
-    // Render seller added-products 
-    const sellerProductsContainer = document.getElementById('seller-products');
-    if (sellerProductsContainer) {
-        renderSellerProducts();
-    }
-
-    // Listen for cart events from dynamically created seller product cards
-    document.addEventListener('sellerAddToCart', (e) => {
-        addToCart(e.detail.name, e.detail.price);
     });
+
+    function updateCartCount(count) {
+        let badge = document.querySelector('.cart-count');
+        if (!badge) {
+            const cartLink = document.querySelector('a[href*="/cart/"]');
+            if (cartLink) {
+                badge = document.createElement('div');
+                badge.className = 'cart-count';
+                badge.textContent = count;
+                cartLink.style.position = 'relative';
+                cartLink.appendChild(badge);
+            }
+        } else {
+            badge.textContent = count;
+        }
+    }
+
+    function showToast(text, type) {
+        let toast = document.getElementById('toast-message');
+        if (!toast) {
+            toast = document.createElement('div');
+            toast.id = 'toast-message';
+            toast.style.position = 'fixed';
+            toast.style.top = '22px';
+            toast.style.left = '50%';
+            toast.style.transform = 'translateX(-50%)';
+            toast.style.padding = '12px 18px';
+            toast.style.borderRadius = '10px';
+            toast.style.zIndex = 2000;
+            toast.style.fontWeight = '700';
+            toast.style.color = '#fff';
+            toast.style.boxShadow = '0 3px 10px rgba(0,0,0,0.25)';
+            document.body.appendChild(toast);
+        }
+
+        toast.textContent = text;
+        toast.style.background = type === 'success' ? '#2a8a3f' : '#c91c1c';
+        toast.style.opacity = '1';
+
+        clearTimeout(window.toastTimer);
+        window.toastTimer = setTimeout(() => {
+            if (toast) toast.style.opacity = '0';
+        }, 2200);
+    }
 
     // Search Button 
-    const searchInput = document.querySelector(".search-input");
+    const searchInput = document.querySelector('.search-input');
     const searchBtn = document.querySelector(".search-btn");
     
     if (searchInput && searchBtn) {
@@ -178,52 +122,18 @@ function saveSession(sessionObj) {
     localStorage.setItem('bakehubSession', JSON.stringify(sessionObj));
 }
 
-// User Login 
+// User Login - let server handle auth forms in this Express app
 
 const submit = document.querySelector('.submit');
 const usernameField = document.getElementById('username');
 
-if (submit && usernameField) {
-    submit.addEventListener("click", (e) => {
-        try {
-            e.preventDefault();
-            const username = usernameField.value;
-            const password = document.getElementById('password').value;
-            validateLogin(username, password);
-        } catch (error) {
-            console.error("Error during login:", error);
-        }
-    });
+if (submit && usernameField && window.location.pathname === '/login') {
+    // remove client-side interception so form POSTS to /login as intended
+    // no client-side logic here
 }
 
+// We leave localStorage helpers for legacy/static-only pages, but the server handles /login and /signup now.
 
-function validateLogin(username, password) {
-    const users = getUsers();
-    const user  = users[username];
-
-    // Hardcoded admin account — username: admin / password: admin123
-    if (username === 'admin' && password === 'admin123') {
-        saveSession({ username: 'admin', role: 'admin' });
-        alert("Welcome, Admin!");
-        window.location.href = "admin.html";
-        return;
-    }
-
-    if (user && user.password === password) {
-        saveSession({ username, role: user.role });
-        alert("Login successful!");
-        // Route admins registered in localStorage to dashboard too
-        if (user.role === 'admin') {
-            window.location.href = "admin.html";
-        } else {
-            window.location.href = "index.html";
-        }
-    } else {
-        alert("Invalid username or password. Please try again.");
-        document.getElementById('username').value = "";
-        document.getElementById('password').value = "";
-    }
-}
 
 // Signup section for sellers
 

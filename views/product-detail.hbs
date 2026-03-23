@@ -314,20 +314,20 @@
 <body>
 <!-- Header -->
 <header class="navbar">
-    <image src="/search.png" height="75"></image>
+    <image src="/bakehub_bg.png" height="75"></image>
     <nav>
-        <a href="/index/{{userName}}">Home</a>
-        <a href="/catalog/{{userName}}">Catalog</a>
-        <a href="help.html">Help</a>
-        <a href="login.html" id="logout-link">Logout</a>
-        <a href="/add_product/{{userName}}" id="add-product-link" style="display:none;">Add Product</a>
-        <a href="profile.html" id="profile-link">Profile</a>
-
-        <input type="checkbox" id="cart-toggle" class="cart-toggle">
-        <label for="cart-toggle" class="cart-icon-container">
-            <div class="cart-icon"><img src="cart-icon.png" alt="Cart Icon"></div>
-            <div class="cart-count">0</div>
-        </label>
+        <a href="/main/{{username}}">Home</a>
+        <a href="/catalog/{{username}}">Catalog</a>
+        <a href="/help">Help</a>
+        <a href="/login">Logout</a>
+        <a href="/profile/{{username}}">Profile</a>
+        {{#if isManager}}
+          <a href="/products/add?username={{username}}">Add Product</a>
+        {{/if}}
+        <a href="/cart/{{username}}" style="margin-left:15px;">
+          <img src="/cart-icon.png" alt="Cart" height="40" style="vertical-align: middle;">
+        </a>
+    </nav>
 
         <label for="cart-toggle" class="overlay"></label>
 
@@ -357,26 +357,54 @@
 <main class="main-content" style="padding: 30px 40px;">
     <div class="reviews-wrapper">
 
-        <a href="catalog.html" class="back-link">← Back to Catalog</a>
+        <a href="/catalog/{{username}}" class="back-link">← Back to Catalog</a>
 
         <!-- Product Hero -->
         <div class="product-hero">
-            <img src="cake.png" alt="Product" id="hero-img">
+            <img src="/{{product.image}}" alt="{{product.name}}" id="hero-img">
             <div class="product-hero-overlay">
-                <h1 id="hero-name">Chocolate Cake</h1>
-                <span class="hero-sub" id="hero-desc">Rich, moist, and layered with deep chocolate flavor.</span>
+                <h1>{{product.name}}</h1>
+                <span class="hero-sub">{{product.description}}</span>
             </div>
+        </div>
+
+        <!-- Pricing & Info -->
+        <div style="background: #fff; border-radius: 16px; padding: 24px; margin-bottom: 28px; box-shadow: 0 2px 14px rgba(107,63,31,0.09);">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <p style="color: #9b7a5a; font-size: 0.9rem; margin-bottom: 8px;">Price</p>
+                    <h2 style="color: #8b5e3c; font-size: 2rem; margin: 0;">₱{{product.price}}</h2>
+                </div>
+                <div>
+                    <p style="color: #9b7a5a; font-size: 0.9rem; margin-bottom: 8px;">Available Stock</p>
+                    <h2 style="color: #8b5e3c; font-size: 1.5rem; margin: 0;">{{product.stock}} units</h2>
+                </div>
+            </div>
+        </div>
+
+        <!-- Price / Add to Cart -->
+        <div style="display:flex; justify-content: space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:12px;">
+            <div style="font-size:1.5rem; color:#8b5e3c; font-weight:700;">₱{{product.price}}</div>
+            <form class="add-to-cart-form" method="POST" action="/cart/add/{{username}}" style="display:flex; align-items:center; gap:10px;">
+                <input type="hidden" name="productId" value="{{product._id}}">
+                <input type="number" name="quantity" value="1" min="1" max="{{product.stock}}" style="width:70px; border:1px solid #d6c8b7; border-radius:5px; padding:5px;">
+                <button type="submit" class="add-to-cart-btn" style="padding:8px 14px;">Add to Cart</button>
+            </form>
         </div>
 
         <!-- Rating Summary -->
         <div class="rating-summary">
             <div class="rating-big">
-                <div class="rating-number" id="avg-score">—</div>
-                <div class="rating-stars-display" id="avg-stars">☆☆☆☆☆</div>
-                <div class="rating-count" id="review-count">0 reviews</div>
-            </div>
-            <div class="rating-bars" id="rating-bars">
-                <!-- Populated by JS -->
+                <div class="rating-number">{{avgRating}}</div>
+                <div class="rating-stars-display">
+                    {{#if (gte avgRating 5)}}★★★★★{{/if}}
+                    {{#if (and (gte avgRating 4) (lt avgRating 5))}}★★★★☆{{/if}}
+                    {{#if (and (gte avgRating 3) (lt avgRating 4))}}★★★☆☆{{/if}}
+                    {{#if (and (gte avgRating 2) (lt avgRating 3))}}★★☆☆☆{{/if}}
+                    {{#if (lt avgRating 2)}}★☆☆☆☆{{/if}}
+                    {{#if (eq avgRating 0)}}☆☆☆☆☆{{/if}}
+                </div>
+                <div class="rating-count">{{reviewCount}} {{#if (eq reviewCount 1)}}review{{else}}reviews{{/if}}</div>
             </div>
         </div>
 
@@ -384,7 +412,24 @@
         <div class="reviews-section">
             <h2>What people are saying</h2>
             <div class="reviews-list" id="reviews-list">
-                <p class="no-reviews">No reviews yet — be the first!</p>
+                {{#if reviews}}
+                    {{#each reviews}}
+                        <div class="review-card">
+                            <div class="review-header">
+                                <div>
+                                    <div class="reviewer-name">Reviewer</div>
+                                    <div class="review-date">{{formatDate this.date}}</div>
+                                </div>
+                                <div class="review-stars">
+                                    {{#repeat this.rating}}★{{/repeat}}{{#repeat (sub 5 this.rating)}}☆{{/repeat}}
+                                </div>
+                            </div>
+                            <p class="review-comment">{{this.comment}}</p>
+                        </div>
+                    {{/each}}
+                {{else}}
+                    <p class="no-reviews">No reviews yet — be the first!</p>
+                {{/if}}
             </div>
         </div>
 
@@ -425,6 +470,50 @@
 </footer>
 
 <script src="script.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const btn = document.getElementById('submit-review-btn');
+    if (!btn) return;
+
+    btn.addEventListener('click', async (e) => {
+        e.preventDefault();
+
+        const reviewerName = document.getElementById('reviewer-name').value.trim();
+        const stars = document.querySelector('input[name="stars"]:checked');
+        const comment = document.getElementById('review-comment').value.trim();
+
+        if (!reviewerName || !stars || !comment) {
+            alert('Please enter your name, rating, and comment.');
+            return;
+        }
+
+        const data = {
+            username: '{{username}}',
+            reviewerName,
+            rating: parseInt(stars.value, 10),
+            comment
+        };
+
+        try {
+            const response = await fetch('/products/{{product._id}}/review', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+
+            const result = await response.json();
+            if (result.success) {
+                alert('Review posted successfully. Refreshing...');
+                window.location.reload();
+            } else {
+                alert('Review failed: ' + (result.error || 'unknown error'));
+            }
+        } catch (err) {
+            alert('Error posting review: ' + err.message);
+        }
+    });
+});
+</script>
 
 </body>
 </html>

@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const order = require('../models/Order');
 const product = require('../models/Product');
+const User = require('../models/User');
+const Order = require('../models/Order');
 
 // get order based on username (TO BE VERIFIED)
 

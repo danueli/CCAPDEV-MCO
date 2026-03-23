@@ -9,11 +9,16 @@
 
     <!-- Header -->
     <header class="navbar">
-      <image src="/search.png" height="75"></image>
+      <image src="/bakehub_bg.png" height="75"></image>
       <nav>
-        <a href="/">Home</a>
+        <a href="/main/{{username}}">Home</a>
         <a href="/catalog/{{username}}">Catalog</a>
         <a href="/help">Help</a>
+        <a href="/login">Logout</a>
+        <a href="/profile/{{username}}">Profile</a>
+        {{#if isManager}}
+          <a href="/products/add?username={{username}}">Add Product</a>
+        {{/if}}
         <a href="/cart/{{username}}">
           <img src="/cart-icon.png" alt="Cart" height="40">
         </a>
@@ -50,7 +55,7 @@
           </a>
 
           <!-- Add to Cart form -->
-          <form method="POST" action="/cart/add/{{../username}}">
+          <form class="add-to-cart-form" method="POST" action="/cart/add/{{../username}}">
             <input type="hidden" name="productId" value="{{this._id}}">
             <input type="number" name="quantity" value="1" min="1" max="{{this.stock}}">
             <button type="submit" class="add-to-cart-btn">Add to Cart</button>
@@ -66,5 +71,6 @@
       <p>CCAPDEV S12 Team Gardenia</p>
     </footer>
 
+    <script src="/script.js"></script>
   </body>
 </html>

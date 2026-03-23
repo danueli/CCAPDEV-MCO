@@ -1,0 +1,53 @@
+<!-- Header -->
+<header class="navbar">
+  <image src="/bakehub_bg.png" height="75"></image>
+  <nav>
+    <a href="/main/{{username}}">Home</a>
+    <a href="/catalog/{{username}}">Catalog</a>
+    <a href="/help">Help</a>
+    <a href="/login">Logout</a>
+    <a href="/profile/{{username}}">Profile</a>
+    {{#if isManager}}
+      <a href="/products/add?username={{username}}">Add Product</a>
+    {{/if}}
+    <a href="/cart/{{username}}">
+      <img src="/cart-icon.png" alt="Cart" height="40">
+    </a>
+  </nav>
+</header>
+
+<!-- Help Title -->
+<main class="main-content">
+    <div class="help-container">
+        <h2>Help & Support</h2>
+
+        <!-- Order Instructions -->
+        <div class="help-section">
+            <h3>How to Order</h3>
+            <p>Browse our products, add them to your cart, and proceed to checkout.</p>
+        </div>
+
+        <!-- Payment -->
+        <div class="help-section">
+            <h3>Payment Methods</h3>
+            <p>We accept GCash, Maya, and Card.</p>
+        </div>
+
+        <!-- Delivery -->
+        <div class="help-section">
+            <h3>Pickup Time</h3>
+            <p>Orders are prepared after 1 hour of checking out. Preparation time may vary with larger orders.</p>
+        </div>
+
+        <!-- Contact -->
+        <div class="help-section">
+            <h3>Contact Us</h3>
+            <p>Email: support@bakehub.com</p>
+        </div>
+    </div>
+</main>
+
+<!-- Footer -->
+<footer class="footer">
+    <p>CCAPDEV S12 Team Gardenia</p>
+</footer>
