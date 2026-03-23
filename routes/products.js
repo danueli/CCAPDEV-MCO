@@ -26,6 +26,23 @@ router.get('/', async (req, res) => {
   }
 });
 
+// GET /products/add-product — show add product form
+router.get('/add-product', (req, res) => {
+  res.render('add_product', { username: req.query.username });
+});
+
+// POST /products/add-product — manager adds product
+router.post('/add-product', async (req, res) => {
+  try {
+    const { name, price, category, stock, description, image, username } = req.body;
+    const newProduct = new Product({ name, price, category, stock, description, image });
+    await newProduct.save();
+    res.redirect(`/main/${username}`);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+});
+
 // GET /products/:id — product detail with reviews
 router.get('/:id', async (req, res) => {
   try {
@@ -83,23 +100,6 @@ router.post('/:id/review', async (req, res) => {
     res.json({ success: true, message: 'Review added successfully' });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
-  }
-});
-
-// GET /products/add — show add product form
-router.get('/add', (req, res) => {
-  res.render('add_product', { username: req.query.username });
-});
-
-// POST /products/add — manager adds product
-router.post('/add', async (req, res) => {
-  try {
-    const { name, price, category, stock, description, image, username } = req.body;
-    const newProduct = new Product({ name, price, category, stock, description, image });
-    await newProduct.save();
-    res.redirect(`/main/${username}`);
-  } catch (err) {
-    res.status(500).send(err.message);
   }
 });
 
