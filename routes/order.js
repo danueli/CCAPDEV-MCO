@@ -17,11 +17,4 @@ router.get('/:username', async (req, res) => {
   }
 });
 
-// posts cart item to the cart of a user based on their username
-
-
-
-
-// update order status 
-
 

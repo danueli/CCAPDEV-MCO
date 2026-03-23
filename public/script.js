@@ -1,5 +1,4 @@
 // Cart Function Commands
-// This app now persists cart entirely in MongoDB; client localStorage cart is deprecated.
 
 document.addEventListener('DOMContentLoaded', () => {
     const addToCartForms = document.querySelectorAll('.add-to-cart-form');
@@ -104,7 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Login Section (Valid user/Buyer accounts)
 
-// ---------- localStorage Helpers ----------
+//  localStorage Helpers 
 
 function getUsers() {
     return JSON.parse(localStorage.getItem('bakehubUsers') || '{}');
@@ -128,11 +127,9 @@ const submit = document.querySelector('.submit');
 const usernameField = document.getElementById('username');
 
 if (submit && usernameField && window.location.pathname === '/login') {
-    // remove client-side interception so form POSTS to /login as intended
-    // no client-side logic here
+
 }
 
-// We leave localStorage helpers for legacy/static-only pages, but the server handles /login and /signup now.
 
 
 // Signup section for sellers
@@ -264,7 +261,7 @@ function renderSellerProducts() {
 
 window.renderSellerProducts = renderSellerProducts;
 
-// ── UPDATED: review block now guards against running on non-review pages ──
+
 document.addEventListener('DOMContentLoaded', () => {
 
     // Only run on reviews.html — bail out if the hero elements don't exist
