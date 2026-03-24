@@ -19,7 +19,6 @@ mongoose.connect(MONGODB_URI)
 const hbs = engine({
   extname: '.hbs',
   helpers: {
-    // Comparison helpers
     eq: (a, b) => a === b,
     ne: (a, b) => a !== b,
     lt: (a, b) => a < b,
@@ -28,11 +27,9 @@ const hbs = engine({
     gte: (a, b) => a >= b,
     and: (...args) => args.slice(0, -1).every(Boolean),
     or: (...args) => args.slice(0, -1).some(Boolean),
-    // Math helpers
     sub: (a, b) => a - b,
     add: (a, b) => a + b,
     mul: (a, b) => a * b,
-    // String/Array helpers
     repeat: function(count, options) {
       let result = '';
       for (let i = 0; i < count; i++) {
@@ -68,9 +65,9 @@ app.use(session({
 // Routes
 app.use('/products', require('./routes/products'));
 app.use('/cart',     require('./routes/cart'));
-app.use('/', require('./routes/user'));
-app.use('/',         require('./routes/index')); 
-
+app.use('/',         require('./routes/order'));     // handles /checkout/:username and /orders/:username
+app.use('/',         require('./routes/user'));
+app.use('/',         require('./routes/index'));
 
 // Start server
 app.listen(PORT, () => {

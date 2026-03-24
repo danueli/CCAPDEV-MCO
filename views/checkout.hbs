@@ -5,7 +5,6 @@
     <link rel="icon" type="image/png" href="/bakehub_favicon.png">
     <link rel="stylesheet" href="/style.css">
     <style>
-        /* styles for Checkout Page */
         .checkout-container {
             max-width: 800px;
             margin: 40px auto;
@@ -54,6 +53,50 @@
             display: flex; 
             justify-content: space-between;
         }
+
+        /* Confirmation modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal-box {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            max-width: 380px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+        .modal-box h3 { color: #4b2e2e; margin-bottom: 10px; }
+        .modal-box p  { color: #666; margin-bottom: 24px; font-size: 0.95rem; }
+        .modal-actions { display: flex; gap: 12px; justify-content: center; }
+        .modal-confirm {
+            padding: 10px 24px;
+            background-color: #8b5e3c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 15px;
+            cursor: pointer;
+        }
+        .modal-confirm:hover { background-color: #6f4a2f; }
+        .modal-cancel {
+            padding: 10px 24px;
+            background-color: #e0e0e0;
+            color: #333;
+            border: none;
+            border-radius: 5px;
+            font-size: 15px;
+            cursor: pointer;
+        }
+        .modal-cancel:hover { background-color: #c8c8c8; }
     </style>
 </head>
 
@@ -71,7 +114,7 @@
     <div class="checkout-container">
         <div class="billing-form">
             <h3>Billing Details</h3>
-            <form action="/checkout/{{user.username}}" method="POST">
+            <form id="checkout-form" action="/checkout/{{user.username}}" method="POST">
                 
                 <div class="form-group">
                     <label>First Name</label>
@@ -93,13 +136,13 @@
                     <input type="text" name="address" required value="{{user.address}}">
                 </div>
 
-                <button type="submit" class="place-order-btn">Place Order</button>
+                <!-- Triggers modal instead of submitting directly -->
+                <button type="button" class="place-order-btn" onclick="showConfirmModal()">Place Order</button>
             </form>
         </div>
 
         <div class="order-summary">
             <h3>Your Order</h3>
-
             <div id="summary-items">
                 {{#each cartItems}}
                 <div class="summary-item">
@@ -108,7 +151,6 @@
                 </div>
                 {{/each}}
             </div>
-
             <div class="total-line">
                 <span>Total</span>
                 <span>₱{{total}}</span>
@@ -117,9 +159,33 @@
     </div>
 </main>
 
+<!-- Confirmation Modal -->
+<div class="modal-overlay" id="confirm-modal">
+    <div class="modal-box">
+        <h3>Confirm Your Order</h3>
+        <p>Are you sure you want to place this order? This action cannot be undone.</p>
+        <div class="modal-actions">
+            <button class="modal-cancel" onclick="hideConfirmModal()">Cancel</button>
+            <button class="modal-confirm" onclick="document.getElementById('checkout-form').submit()">Confirm Order</button>
+        </div>
+    </div>
+</div>
+
 <footer class="footer">
     <p>CCAPDEV S12 Team Gardenia</p>
 </footer>
 
+<script>
+    function showConfirmModal() {
+        document.getElementById('confirm-modal').classList.add('active');
+    }
+    function hideConfirmModal() {
+        document.getElementById('confirm-modal').classList.remove('active');
+    }
+    // Close modal if user clicks outside the box
+    document.getElementById('confirm-modal').addEventListener('click', function(e) {
+        if (e.target === this) hideConfirmModal();
+    });
+</script>
 </body>
 </html>
