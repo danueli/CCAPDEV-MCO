@@ -1,7 +1,33 @@
 const express = require('express');
 const router = express.Router();
+const multer = require('multer');
+const path = require('path');
 const Product = require('../models/Product');
 const Review = require('../models/Reviews');
+
+// --- Multer config: save uploaded images to /public/uploads/ ---
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, path.join(__dirname, '../public'));
+  },
+  filename: function (req, file, cb) {
+    // e.g. "1714000000000-croissant.jpg" — unique timestamp prefix
+    const uniqueName = Date.now() + '-' + file.originalname.replace(/\s+/g, '_');
+    cb(null, uniqueName);
+  }
+});
+
+const upload = multer({
+  storage,
+  fileFilter: (req, file, cb) => {
+    // Accept image files only
+    if (file.mimetype.startsWith('image/')) {
+      cb(null, true);
+    } else {
+      cb(new Error('Only image files are allowed'), false);
+    }
+  }
+});
 
 // GET /products — show all products
 router.get('/', async (req, res) => {
@@ -31,11 +57,15 @@ router.get('/add-product', (req, res) => {
   res.render('add_product', { username: req.query.username });
 });
 
-// POST /products/add-product — manager adds product
-router.post('/add-product', async (req, res) => {
+// POST /products/add-product — manager adds product (with image file upload)
+router.post('/add-product', upload.single('image'), async (req, res) => {
   try {
-    const { name, price, category, stock, description, image, username } = req.body;
-    const newProduct = new Product({ name, price, category, stock, description, image });
+    const { name, price, category, stock, description, username } = req.body;
+
+    // Build the public-facing image path (served as /uploads/filename.jpg)
+    const imagePath = req.file ? req.file.filename : '';
+
+    const newProduct = new Product({ name, price, category, stock, description, image: imagePath });
     await newProduct.save();
     res.redirect(`/main/${username}`);
   } catch (err) {
