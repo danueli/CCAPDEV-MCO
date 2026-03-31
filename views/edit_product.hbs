@@ -1,0 +1,79 @@
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-md-8 mx-auto">
+      <h1>Edit Product</h1>
+      
+      <form id="editProductForm" enctype="multipart/form-data">
+        <div class="mb-3">
+          <label for="name" class="form-label">Product Name</label>
+          <input type="text" class="form-control" id="name" name="name" value="{{product.name}}" required>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label for="price" class="form-label">Price (₱)</label>
+              <input type="number" class="form-control" id="price" name="price" value="{{product.price}}" step="0.01" required>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label for="category" class="form-label">Category</label>
+              <input type="text" class="form-control" id="category" name="category" value="{{product.category}}" required>
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="stock" class="form-label">Stock</label>
+          <input type="number" class="form-control" id="stock" name="stock" value="{{product.stock}}" required>
+        </div>
+
+        <div class="mb-3">
+          <label for="description" class="form-label">Description</label>
+          <textarea class="form-control" id="description" name="description" rows="4" required>{{product.description}}</textarea>
+        </div>
+
+        <div class="mb-3">
+          <label for="image" class="form-label">Product Image</label>
+          {{#if product.image}}
+            <div class="mb-2">
+              <img src="/{{product.image}}" alt="{{product.name}}" style="max-width: 200px; max-height: 200px; object-fit: cover; border: 1px solid #ddd; padding: 5px;">
+            </div>
+          {{/if}}
+          <input type="file" class="form-control" id="image" name="image" accept="image/*">
+          <small class="text-muted">Leave empty to keep current image</small>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Update Product</button>
+        <a href="/main/{{username}}" class="btn btn-secondary">Cancel</a>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+document.getElementById('editProductForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  
+  const formData = new FormData(e.target);
+  formData.append('username', '{{username}}');
+  
+  try {
+    const response = await fetch('/products/{{product._id}}/edit', {
+      method: 'POST',
+      body: formData
+    });
+    
+    const data = await response.json();
+    if (data.success) {
+      alert('Product updated successfully');
+      window.location.href = '/main/{{username}}';
+    } else {
+      alert('Error: ' + data.error);
+    }
+  } catch (err) {
+    alert('Error: ' + err.message);
+  }
+});
+</script>

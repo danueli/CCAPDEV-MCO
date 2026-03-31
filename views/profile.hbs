@@ -7,7 +7,7 @@
     <a href="/help">Help</a>
     <a href="/login">Logout</a>
     <a href="/profile/{{username}}">Profile</a>
-    {{#if isManager}}
+    {{#if isAdmin}}
       <a href="/products/add?username={{username}}">Add Product</a>
     {{/if}}
     <a href="/cart/{{username}}">
@@ -120,6 +120,14 @@
                             <button type="submit" class="btn-submit">Save Changes</button>
                         </form>
                     </div>
+
+                    <div class="profile-card">
+                        <h3>Account Actions</h3>
+                        <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+                            <a href="/orders/{{username}}" class="btn btn-info" style="padding: 10px 20px; text-decoration: none; background-color: #4CAF50; color: white; border-radius: 5px;">View My Orders</a>
+                        </div>
+                        <button onclick="deleteAccount('{{username}}')" class="btn-danger" style="padding: 10px 20px; background-color: #f44336; color: white; border: none; border-radius: 5px; cursor: pointer;">Delete Account</button>
+                    </div>
                 </div>
             </div>
         {{else}}
@@ -138,6 +146,19 @@
 </footer>
 
 <script>
+    // Delete account function
+    function deleteAccount(username) {
+        if (confirm('Are you sure you want to delete your account? This action cannot be undone. All your data (orders, cart, reviews) will be deleted.')) {
+            if (confirm('This is your last chance. Are you absolutely sure?')) {
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = `/profile/${username}/delete`;
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
+    }
+
     // Tab switching functionality
     document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {

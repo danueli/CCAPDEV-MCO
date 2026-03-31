@@ -66,17 +66,17 @@ router.post('/signup', async (req, res) => {
     }
 });
 
-//(seller login page)
+// (admin login page)
 router.get('/s_login', (req, res) => {
     res.render('s_login');
 });
 
-// (seller signup page)
+// (admin signup page)
 router.get('/s_signup', (req, res) => {
     res.render('s_signup');
 });
 
-// (create new seller/manager)
+// (create new admin)
 router.post('/s_signup', async (req, res) => {
     try {
         const { firstName, lastName, username, email, phone, password } = req.body;
@@ -94,7 +94,7 @@ router.post('/s_signup', async (req, res) => {
             email,
             phone,
             password,
-            type: 'manager'
+            type: 'admin'
         });
 
         await newUser.save();
@@ -125,6 +125,33 @@ router.post('/profile/:username/edit', async (req, res) => {
             { firstName, lastName, email, phone, street, city, zip }
         );
         res.redirect(`/profile/${req.params.username}`);
+    } catch (err) {
+        res.status(500).send(err.message);
+    }
+});
+
+// DELETE /profile/:username — delete user account
+router.post('/profile/:username/delete', async (req, res) => {
+    try {
+        const username = req.params.username;
+
+        // Find user to get ID
+        const user = await User.findOne({ username });
+        if (!user) return res.status(404).send('User not found');
+
+        // Delete user's cart, orders, and reviews
+        const Cart = require('../models/Cart');
+        const Order = require('../models/Order');
+        const Reviews = require('../models/Reviews');
+
+        await Cart.deleteMany({ userId: user._id });
+        await Order.deleteMany({ userId: user._id });
+        await Reviews.deleteMany({ userId: user._id });
+
+        // Delete the user
+        await User.findByIdAndDelete(user._id);
+
+        res.redirect('/login');
     } catch (err) {
         res.status(500).send(err.message);
     }

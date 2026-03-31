@@ -42,7 +42,7 @@
         <a href="/help">Help</a>
         <a href="/login">Logout</a>
         <a href="/profile/{{username}}">Profile</a>
-        {{#if isManager}}
+        {{#if isAdmin}}
           <a href="/products/add-product?username={{username}}">Add Product</a>
         {{/if}}
         <a href="/cart/{{username}}">

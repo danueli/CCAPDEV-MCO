@@ -1,0 +1,83 @@
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-md-12">
+      <h1>My Orders</h1>
+      <a href="/main/{{username}}" class="btn btn-secondary mb-3">Back to Home</a>
+      
+      {{#if orders.length}}
+        <div class="table-responsive">
+          <table class="table table-striped table-hover">
+            <thead class="table-dark">
+              <tr>
+                <th>Order ID</th>
+                <th>Date</th>
+                <th>Items</th>
+                <th>Total Price</th>
+                <th>Status</th>
+                <th>Address</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {{#each orders}}
+                <tr>
+                  <td><small>{{this._id}}</small></td>
+                  <td>{{formatDate this.date}}</td>
+                  <td>
+                    <small>
+                      {{#each this.items}}
+                        {{this.name}} x{{this.quantity}}<br>
+                      {{/each}}
+                    </small>
+                  </td>
+                  <td>₱{{this.totalPrice}}</td>
+                  <td>
+                    <span class="badge {{#eq this.status 'Pending'}}bg-warning{{/eq}}{{#eq this.status 'Shipped'}}bg-info{{/eq}}{{#eq this.status 'Delivered'}}bg-success{{/eq}}{{#eq this.status 'Cancelled'}}bg-danger{{/eq}}">
+                      {{this.status}}
+                    </span>
+                  </td>
+                  <td><small>{{this.address}}</small></td>
+                  <td>
+                    {{#eq this.status 'Pending'}}
+                      <button class="btn btn-sm btn-danger" onclick="deleteOrder('{{this._id}}')">Cancel</button>
+                    {{else}}
+                      <span class="text-muted">-</span>
+                    {{/eq}}
+                  </td>
+                </tr>
+              {{/each}}
+            </tbody>
+          </table>
+        </div>
+      {{else}}
+        <div class="alert alert-info">
+          No orders yet. <a href="/catalog/{{username}}">Start shopping!</a>
+        </div>
+      {{/if}}
+    </div>
+  </div>
+</div>
+
+<script>
+function deleteOrder(orderId) {
+  if (confirm('Are you sure you want to cancel this order?')) {
+    fetch(`/orders/${orderId}/delete`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ username: '{{username}}' })
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.success) {
+        alert('Order cancelled successfully');
+        location.reload();
+      } else {
+        alert('Error: ' + data.error);
+      }
+    })
+    .catch(err => alert('Error: ' + err.message));
+  }
+}
+</script>

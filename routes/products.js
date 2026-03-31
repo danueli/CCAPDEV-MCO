@@ -45,7 +45,7 @@ router.get('/', async (req, res) => {
     res.render('products', { 
       products, 
       username,
-      isManager
+      isAdmin
     });
   } catch (err) {
     res.status(500).send(err.message);
@@ -101,7 +101,7 @@ router.get('/:id', async (req, res) => {
       avgRating,
       reviewCount: reviews.length,
       username,
-      isManager
+      isAdmin
     });
   } catch (err) {
     res.status(500).send(err.message);
@@ -128,6 +128,128 @@ router.post('/:id/review', async (req, res) => {
     });
     await review.save();
     res.json({ success: true, message: 'Review added successfully' });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// POST /products/:productId/review/:reviewId/edit — update review
+router.post('/:productId/review/:reviewId/edit', async (req, res) => {
+  try {
+    const { username, rating, comment } = req.body;
+
+    const review = await Review.findById(req.params.reviewId);
+    if (!review) return res.status(404).json({ success: false, error: 'Review not found' });
+
+    if (username) {
+      const User = require('../models/User');
+      const user = await User.findOne({ username }).lean();
+      if (!user || review.userId.toString() !== user._id.toString()) {
+        return res.status(403).json({ success: false, error: 'Unauthorized: You can only edit your own reviews' });
+      }
+    }
+
+    const extractName = comment.split(':')[0].trim();
+    review.rating = parseInt(rating, 10);
+    review.comment = `${extractName}: ${comment.substring(comment.indexOf(':') + 1).trim()}`;
+    await review.save();
+
+    res.json({ success: true, message: 'Review updated successfully' });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// POST /products/:productId/review/:reviewId/delete — delete review
+router.post('/:productId/review/:reviewId/delete', async (req, res) => {
+  try {
+    const { username } = req.body;
+
+    const review = await Review.findById(req.params.reviewId);
+    if (!review) return res.status(404).json({ success: false, error: 'Review not found' });
+
+    if (username) {
+      const User = require('../models/User');
+      const user = await User.findOne({ username }).lean();
+      if (!user || review.userId.toString() !== user._id.toString()) {
+        return res.status(403).json({ success: false, error: 'Unauthorized: You can only delete your own reviews' });
+      }
+    }
+
+    await Review.findByIdAndDelete(req.params.reviewId);
+
+    res.json({ success: true, message: 'Review deleted successfully' });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// GET /products/:id/edit — show edit product form (manager only)
+router.get('/:id/edit', async (req, res) => {
+  try {
+    const product = await Product.findById(req.params.id).lean();
+    if (!product) return res.status(404).send('Product not found');
+
+    const username = req.query.username;
+    const User = require('../models/User');
+    const user = await User.findOne({ username }).lean();
+    
+    if (!user || user.type !== 'admin') {
+      return res.status(403).send('Unauthorized: Only admins can edit products');
+    }
+
+    res.render('edit_product', { product, username });
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+});
+
+// POST /products/:id/edit — update product
+router.post('/:id/edit', upload.single('image'), async (req, res) => {
+  try {
+    const { name, price, category, stock, description, username } = req.body;
+    
+    const User = require('../models/User');
+    const user = await User.findOne({ username }).lean();
+    if (!user || user.type !== 'admin') {
+      return res.status(403).json({ success: false, error: 'Unauthorized: Only admins can edit products' });
+    }
+
+    const updateData = { name, price, category, stock, description };
+    if (req.file) {
+      updateData.image = req.file.filename;
+    }
+
+    const updatedProduct = await Product.findByIdAndUpdate(req.params.id, updateData, { new: true });
+    
+    res.json({ success: true, message: 'Product updated successfully', product: updatedProduct });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// POST /products/:id/delete — delete product (manager only)
+router.post('/:id/delete', async (req, res) => {
+  try {
+    const { username } = req.body;
+    
+    const User = require('../models/User');
+    const user = await User.findOne({ username }).lean();
+    if (!user || user.type !== 'admin') {
+      return res.status(403).json({ success: false, error: 'Unauthorized: Only admins can delete products' });
+    }
+
+    // Also remove product from all reviews and carts
+    await Review.deleteMany({ productId: req.params.id });
+    const Cart = require('../models/Cart');
+    await Cart.updateMany(
+      { 'items.productId': req.params.id },
+      { $pull: { items: { productId: req.params.id } } }
+    );
+
+    await Product.findByIdAndDelete(req.params.id);
+    
+    res.json({ success: true, message: 'Product deleted successfully' });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
   }

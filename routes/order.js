@@ -109,4 +109,64 @@ router.post('/checkout/:username', async (req, res) => {
   }
 });
 
+// GET /orders/:username — view all orders of a user
+router.get('/orders/:username', async (req, res) => {
+  try {
+    const user = await User.findOne({ username: req.params.username }).lean();
+    if (!user) return res.status(404).send('User not found');
+
+    const orders = await Order.find({ userId: user._id }).lean();
+
+    // Populate product info for each order
+    const populatedOrders = await Promise.all(
+      orders.map(async (order) => {
+        const items = await Promise.all(
+          order.items.map(async (item) => {
+            const product = await Product.findById(item.productId).lean();
+            return {
+              ...item,
+              name: product?.name || 'Unknown',
+              price: product?.price || 0,
+            };
+          })
+        );
+        return { ...order, items };
+      })
+    );
+
+    res.render('orders', { orders: populatedOrders, username: req.params.username });
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+});
+
+// POST /orders/:id/delete — delete an order
+router.post('/orders/:id/delete', async (req, res) => {
+  try {
+    const { username } = req.body;
+
+    const user = await User.findOne({ username }).lean();
+    if (!user) return res.status(404).json({ success: false, error: 'User not found' });
+
+    const order = await Order.findById(req.params.id).lean();
+    if (!order) return res.status(404).json({ success: false, error: 'Order not found' });
+
+    // Verify order belongs to this user
+    if (order.userId.toString() !== user._id.toString()) {
+      return res.status(403).json({ success: false, error: 'Unauthorized' });
+    }
+
+    // Only allow deletion of Pending orders
+    if (order.status !== 'Pending') {
+      return res.status(400).json({ success: false, error: 'Can only delete pending orders' });
+    }
+
+    await Order.findByIdAndDelete(req.params.id);
+
+    res.json({ success: true, message: 'Order cancelled successfully' });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
 module.exports = router;
