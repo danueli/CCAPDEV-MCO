@@ -1,12 +1,11 @@
 <!-- Header -->
 <header class="navbar">
-  <image src="/bakehub_favicon.png" height="75"></image>
+  <image src="/search.png" height="75"></image>
   <nav>
     <a href="/main/{{username}}">Home</a>
     <a href="/catalog/{{username}}">Catalog</a>
     <a href="/help">Help</a>
     <a href="/login">Logout</a>
-    <a href="/profile/{{username}}">Profile</a>
     <a href ="/about">About Us</a>
     {{#if isAdmin}}
       <a href="/products/add?username={{username}}">Add Product</a>

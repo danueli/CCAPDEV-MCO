@@ -4,6 +4,30 @@
     <title>Bakehub | Login</title>
     <link rel="icon" type="image/png" href="/bakehub_favicon.png">
     <link rel="stylesheet" href="/style.css">
+    <style>
+      .toast {
+        position: fixed;
+        top: 28px;
+        left: 50%;
+        transform: translateX(-50%) translateY(-20px);
+        background-color: #c0392b;
+        color: white;
+        padding: 12px 28px;
+        border-radius: 8px;
+        font-size: 0.95rem;
+        font-weight: 500;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+        z-index: 9999;
+        opacity: 0;
+        transition: opacity 0.35s ease, transform 0.35s ease;
+        pointer-events: none;
+        white-space: nowrap;
+      }
+      .toast.show {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+    </style>
   </head>
   <body>
 
@@ -16,13 +40,18 @@
       </nav>
     </header>
 
+    <!-- Toast popup for backend error (wrong username/password) -->
+    {{#if error}}
+      <div class="toast" id="error-toast">{{error}}</div>
+    {{/if}}
+
     <br><br>
 
     <main class="login">
       <div class="login-card" id="login-card">
         <h2 class="login title">Login to your account</h2><br>
 
-        <form method="POST" action="/login">
+        <form method="POST" action="/login" id="login-form">
           <div class="input-container">
             <label for="username">Username:</label>
             <input type="text" id="username" name="username" required><br><br>
@@ -40,11 +69,18 @@
       </div>
     </main>
 
-    <!-- Footer -->
     <footer class="footer">
       <p>CCAPDEV S12 Team Gardenia</p>
     </footer>
 
     <script src="script.js"></script>
+    <script>
+      // Show Error Message pop-up then hide after 3s
+      const toast = document.getElementById('error-toast');
+      if (toast) {
+        setTimeout(() => toast.classList.add('show'), 100);
+        setTimeout(() => toast.classList.remove('show'), 3500);
+      }
+    </script>
   </body>
 </html>

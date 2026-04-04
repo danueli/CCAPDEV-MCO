@@ -69,6 +69,7 @@ app.use('/',         require('./routes/order'));     // handles /checkout/:usern
 app.use('/',         require('./routes/user'));
 app.use('/',         require('./routes/index'));
 app.use('/',         require('./routes/about'));     // handles app information
+app.use('/',         require('./routes/login'));     // handles login/logout
 
 // Start server
 app.listen(PORT, () => {
