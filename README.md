@@ -76,6 +76,7 @@ http://localhost:3000
 * `POST /checkout/:username` → place order
 * `GET /help` → help page
 * `GET /admin` → admin dashboard
+* `GET /about` → about us of the project
 
 ## Database Models
 
