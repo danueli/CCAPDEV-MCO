@@ -39,13 +39,14 @@ function computeTotal(items, products) {
     console.log('Products seeded:', products.length);
 
     //Seed User first before Cart
+    const bcrypt = require('bcryptjs');
     const users = await User.insertMany([
-    { firstName: 'Juan',  lastName: 'Dela Cruz',username: 'juandelacruz', email: 'juan.dela.cruz@example.com',phone: '09760156942',street: '123 Main St', city: 'Manila', zip: '1000', password: 'password123', type: 'customer' },
-    { firstName: 'Justin', lastName: 'Beiber', username: 'justinbeiber', email: 'justin.beiber@example.com',   phone: '09123456789',street: '456 Oak Ave', city: 'Cebu', zip: '6000', password: 'password234', type: 'customer' },
-    { firstName: 'Titus', lastName: 'Rodriguez', username: 'titusrodriguez',     email: 'titus.rodriguez@example.com',    phone: '09123456789',street: '789 Pine Rd', city: 'Davao', zip: '8000', password: 'password567', type: 'customer' },
-    { firstName: 'Mang',   lastName: 'Inasal', username: 'manginasal',    email: 'mang.inasal@example.com',     phone: '09123456789',street: '321 Elm St', city: 'Baguio', zip: '2000', password: 'password678', type: 'customer' },
-    { firstName: 'Kent',  lastName: 'Lopez', username: 'kentlopez',  email: 'kent.lopez@example.com',phone: '09123456781',  street: '654 Maple Dr', city: 'Cagayan de Oro', zip: '9000', password: 'password910', type: 'customer' },
-    { firstName: 'Admin', lastName: 'Baker', username: 'adminbaker', email: 'admin@bakehub.com', phone: '09000000000', street: '1 Baker St', city: 'Manila', zip: '1000', password: 'admin123', type: 'admin' },
+    { firstName: 'Juan',    lastName: 'Dela Cruz',   username: 'juandelacruz',   email: 'juan.dela.cruz@example.com',     phone: '09760156942', street: '123 Main St',  city: 'Manila',          zip: '1000', password: await bcrypt.hash('password123', 10), type: 'customer' },
+    { firstName: 'Justin',  lastName: 'Beiber',      username: 'justinbeiber',   email: 'justin.beiber@example.com',      phone: '09123456789', street: '456 Oak Ave',  city: 'Cebu',            zip: '6000', password: await bcrypt.hash('password234', 10), type: 'customer' },
+    { firstName: 'Titus',   lastName: 'Rodriguez',   username: 'titusrodriguez', email: 'titus.rodriguez@example.com',    phone: '09123456789', street: '789 Pine Rd',  city: 'Davao',           zip: '8000', password: await bcrypt.hash('password567', 10), type: 'customer' },
+    { firstName: 'Mang',    lastName: 'Inasal',      username: 'manginasal',     email: 'mang.inasal@example.com',        phone: '09123456789', street: '321 Elm St',   city: 'Baguio',          zip: '2000', password: await bcrypt.hash('password678', 10), type: 'customer' },
+    { firstName: 'Kent',    lastName: 'Lopez',       username: 'kentlopez',      email: 'kent.lopez@example.com',         phone: '09123456781', street: '654 Maple Dr', city: 'Cagayan de Oro',  zip: '9000', password: await bcrypt.hash('password910', 10), type: 'customer' },
+    { firstName: 'Admin',   lastName: 'Baker',       username: 'adminbaker',     email: 'admin@bakehub.com',              phone: '09000000000', street: '1 Baker St',   city: 'Manila',          zip: '1000', password: await bcrypt.hash('admin123',    10), type: 'admin'    },
     ]);
     console.log('Users seeded:', users.length);
 

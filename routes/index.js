@@ -57,7 +57,8 @@ router.get('/help', (req, res) => {
 });
 
 // Admin dashboard route
-router.get('/admin', async (req, res) => {
+const { requireAdmin } = require('../middleware/auth');
+router.get('/admin', requireAdmin, async (req, res) => {
   try {
     const users = await User.find({ type: 'customer' }).lean();
     const managers = await User.find({ type: 'manager' }).lean();

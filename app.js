@@ -62,14 +62,19 @@ app.use(session({
     saveUninitialized: false,
 }));
 
-// Routes
-app.use('/products', require('./routes/products'));
-app.use('/cart',     require('./routes/cart'));
-app.use('/',         require('./routes/order'));     // handles /checkout/:username and /orders/:username
+// Auth
+const { requireLogin, requireAdmin } = require('./middleware/auth');
+
+// Public routes — no login required
+app.use('/',         require('./routes/login'));
 app.use('/',         require('./routes/user'));
-app.use('/',         require('./routes/index'));
-app.use('/',         require('./routes/about'));     // handles app information
-app.use('/',         require('./routes/login'));     // handles login/logout
+
+// Protected routes — must be logged in
+app.use('/products', requireLogin, require('./routes/products'));
+app.use('/cart',     requireLogin, require('./routes/cart'));
+app.use('/',         requireLogin, require('./routes/order'));
+app.use('/',         requireLogin, require('./routes/index'));
+app.use('/',         requireLogin, require('./routes/about'));
 
 // Start server
 app.listen(PORT, () => {

@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
+const bcrypt = require('bcryptjs');
 
 // GET /login - render login page
 router.get('/login', (req, res) => {
@@ -10,25 +11,21 @@ router.get('/login', (req, res) => {
 // POST /login - handle login form submission
 router.post('/login', async (req, res) => {
   try {
-    const { username, password, type } = req.body;
+    const { username, password } = req.body;
 
     // Find user by username
     const user = await User.findOne({ username }).lean();
 
-    // Check if user exists
-    if (!user) {
+    // Check if user exists and if password matches the stored hash
+    // Combined into one check to avoid leaking whether a username exists
+    if (!user || !(await bcrypt.compare(password, user.password))) {
       return res.render('login', { error: 'Incorrect username or password.' });
     }
 
-    // Check if password matches
-    if (user.password !== password) {
-      return res.render('login', { error: 'Incorrect username or password.' });
-    }
-
-    // If a type was specified (e.g. from seller login), check it matches
-    if (type && user.type !== type) {
-      return res.render('login', { error: 'Account type does not match. Please use the correct login page.' });
-    }
+    // Save user data into session after successful login
+    req.session.userId   = user._id;
+    req.session.username = user.username;
+    req.session.role     = user.type;
 
     // Redirect based on user type
     if (user.type === 'admin') {
@@ -50,7 +47,10 @@ router.get('/s_login', (req, res) => {
 
 // GET /logout - log user out and redirect to login
 router.get('/logout', (req, res) => {
-  res.redirect('/login');
+  req.session.destroy(err => {
+    if (err) console.error(err);
+    res.redirect('/login');
+  });
 });
 
 module.exports = router;

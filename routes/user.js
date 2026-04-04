@@ -1,33 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
-
-//get login page
-router.get('/login', (req, res) => {
-    res.render('login');
-});
-
-// post login page
-router.post('/login', async (req, res) => {
-    try {
-        const { username, password, type } = req.body;
-        const user = await User.findOne({ username, password }).lean();
-
-        if (!user) {
-            return res.render('login', { error: 'Invalid username or password' });
-        }
-
-        // Redirect based on user type
-        if (user.type === 'manager') {
-            return res.redirect(`/main/${user.username}`);
-        } else {
-            return res.redirect(`/main/${user.username}`);
-        }
-
-    } catch (err) {
-        res.status(500).send(err.message);
-    }
-});
+const bcrypt = require('bcryptjs');
 
 // Get signup page for customers
 router.get('/signup', (req, res) => {
@@ -54,7 +28,7 @@ router.post('/signup', async (req, res) => {
             street,
             city,
             zip,
-            password,
+            password: await bcrypt.hash(password, 10),
             type: 'customer'
         });
 
@@ -93,7 +67,7 @@ router.post('/s_signup', async (req, res) => {
             username,
             email,
             phone,
-            password,
+            password: await bcrypt.hash(password, 10),
             type: 'admin'
         });
 
