@@ -661,7 +661,7 @@ input[type = "number"] {
     color: white;
     font-size: 15px;
     margin-top: 15px;
-    display: block;
+    display: inline-block;
 }
 
 .c_signup:hover, .s_login:hover{

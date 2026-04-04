@@ -1,48 +1,50 @@
+<!DOCTYPE html>
 <html>
   <head>
-      <title> Bakehub | Login</title>
-      <link rel = "icon" type = "image/png" href = "/bakehub_favicon.png">
-      <link rel = "stylesheet" href = "/style.css">
+    <title>Bakehub | Login</title>
+    <link rel="icon" type="image/png" href="/bakehub_favicon.png">
+    <link rel="stylesheet" href="/style.css">
   </head>
-    <body>
-        <header class="navbar">
-           <image src = "/search.png" height = "75">
-           </image>
-            <nav>
-            <a href="/help/">Help</a>
-            <a href="/s_signup/">Signup as Seller</a>
-     </nav>
-  </header>
+  <body>
 
-  <br><br>
-   
-    <main class = "login">
-        <div class = "login-card" id = "login-card">
-           <h2 class = "login title"> Login to your account</h2> <br>
-           
-            <form method="POST" action="/login">
-                <div class = "input-container">
-                      <label for="username">Username:</label>
-                      <input type="username" id="username" name="username" required> <br><br>
-                       <label for="password">Password:</label>
-                      <input type="password" id="password" name="password" required> <br><br>
+    <header class="navbar">
+      <image src="/search.png" height="75"></image>
+      <nav>
+        <a href="/help">Help</a>
+        <a href="/s_signup">Signup as Seller</a>
+        <a href="/about">About Bakehub</a>
+      </nav>
+    </header>
 
-                </div>
-                <button type="submit" class="submit">Login</button>
-            </form>
-             <div class = "signup-options"> 
-               <a href = "/signup" class ="c_signup" id ="c_signup">Don't have an account?</a>
-               <a href = "/s_login" class = "s_login" id = "s_login">Seller Login</a> </div>
+    <br><br>
+
+    <main class="login">
+      <div class="login-card" id="login-card">
+        <h2 class="login title">Login to your account</h2><br>
+
+        <form method="POST" action="/login">
+          <div class="input-container">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required><br><br>
+
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required><br><br>
           </div>
+          <button type="submit" class="submit">Login</button>
+        </form>
+
+        <div class="signup-options">
+          <a href="/signup" class="c_signup" id="c_signup">Don't have an account?</a>
+          <a href="/s_login" class="s_login" id="s_login">Seller Login</a>
+        </div>
+      </div>
     </main>
 
     <!-- Footer -->
-  <footer class="footer">
-    <p>CCAPDEV S12 Team Gardenia </p>
-  </footer>
+    <footer class="footer">
+      <p>CCAPDEV S12 Team Gardenia</p>
+    </footer>
+
     <script src="script.js"></script>
-    </body>
-
-    
-
+  </body>
 </html>

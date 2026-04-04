@@ -68,6 +68,7 @@ app.use('/cart',     require('./routes/cart'));
 app.use('/',         require('./routes/order'));     // handles /checkout/:username and /orders/:username
 app.use('/',         require('./routes/user'));
 app.use('/',         require('./routes/index'));
+app.use('/',         require('./routes/about'));     // handles app information
 
 // Start server
 app.listen(PORT, () => {
