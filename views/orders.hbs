@@ -4,7 +4,7 @@
     <nav>
       <a href="/main/{{username}}">Home</a>
       <a href="/profile/{{username}}">Back to Profile</a>
-      {{#if isAdmin}}
+      {{#if canAddProduct}}
         <a href="/products/add?username={{username}}">Add Product</a>
       {{/if}}
       <a href="/cart/{{username}}">

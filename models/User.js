@@ -10,7 +10,7 @@ const userSchema = new mongoose.Schema({
   // Account Details
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  type: { type: String, enum: ['customer', 'admin'], default: 'customer' },
+  type: { type: String, enum: ['customer', 'admin','manager'], default: 'customer' },
 
   // Shipping Address
   street:   { type: String },

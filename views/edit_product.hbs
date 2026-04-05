@@ -1,79 +1,234 @@
-<div class="container mt-5">
-  <div class="row">
-    <div class="col-md-8 mx-auto">
-      <h1>Edit Product</h1>
-      
-      <form id="editProductForm" enctype="multipart/form-data">
-        <div class="mb-3">
-          <label for="name" class="form-label">Product Name</label>
-          <input type="text" class="form-control" id="name" name="name" value="{{product.name}}" required>
-        </div>
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Bakehub | Edit Product</title>
+    <link rel="icon" type="image/png" href="/bakehub_favicon.png">
+    <link rel="stylesheet" href="/style.css">
+    <style>
+      .edit-card {
+        background-color: #fff;
+        padding: 36px 40px;
+        border-radius: 12px;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+        max-width: 520px;
+        width: 100%;
+        margin: 0 auto;
+      }
 
-        <div class="row">
-          <div class="col-md-6">
-            <div class="mb-3">
-              <label for="price" class="form-label">Price (₱)</label>
-              <input type="number" class="form-control" id="price" name="price" value="{{product.price}}" step="0.01" required>
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="mb-3">
-              <label for="category" class="form-label">Category</label>
-              <input type="text" class="form-control" id="category" name="category" value="{{product.category}}" required>
-            </div>
-          </div>
-        </div>
+      .edit-card h2 {
+        color: #4b2e2e;
+        margin-bottom: 24px;
+        text-align: center;
+        font-size: 1.5rem;
+      }
 
-        <div class="mb-3">
-          <label for="stock" class="form-label">Stock</label>
-          <input type="number" class="form-control" id="stock" name="stock" value="{{product.stock}}" required>
-        </div>
+      .edit-card label {
+        display: block;
+        margin-bottom: 4px;
+        font-weight: bold;
+        color: #4b2e2e;
+        font-size: 0.9rem;
+      }
 
-        <div class="mb-3">
-          <label for="description" class="form-label">Description</label>
-          <textarea class="form-control" id="description" name="description" rows="4" required>{{product.description}}</textarea>
-        </div>
+      .edit-card input[type="text"],
+      .edit-card input[type="number"],
+      .edit-card textarea,
+      .edit-card input[type="file"] {
+        width: 100%;
+        padding: 9px 12px;
+        border: 1px solid #c9a87a;
+        border-radius: 6px;
+        margin-bottom: 16px;
+        font-size: 0.95rem;
+        box-sizing: border-box;
+        background-color: #fdf8f3;
+        color: #333;
+      }
 
-        <div class="mb-3">
-          <label for="image" class="form-label">Product Image</label>
+      .edit-card textarea {
+        resize: vertical;
+        min-height: 80px;
+      }
+
+      .current-image-label {
+        font-size: 0.82rem;
+        color: #888;
+        margin-bottom: 6px;
+        display: block;
+      }
+
+      .current-image-preview {
+        max-width: 180px;
+        max-height: 180px;
+        object-fit: cover;
+        border: 2px solid #8b5e3c;
+        border-radius: 8px;
+        margin-bottom: 10px;
+        display: block;
+      }
+
+      #new-image-preview-container {
+        display: none;
+        flex-direction: column;
+        align-items: flex-start;
+        margin-bottom: 12px;
+      }
+
+      #new-image-preview {
+        max-width: 180px;
+        max-height: 180px;
+        border-radius: 8px;
+        border: 2px solid #8b5e3c;
+        object-fit: cover;
+      }
+
+      .btn-row {
+        display: flex;
+        gap: 12px;
+        margin-top: 8px;
+        flex-wrap: wrap;
+      }
+
+      .btn-update {
+        background-color: #8b5e3c;
+        color: #fff;
+        border: none;
+        padding: 10px 24px;
+        border-radius: 7px;
+        font-size: 1rem;
+        cursor: pointer;
+        font-weight: bold;
+        flex: 1;
+      }
+
+      .btn-update:hover {
+        background-color: #6e4a2e;
+      }
+
+      .btn-cancel {
+        background-color: #ccc;
+        color: #333;
+        border: none;
+        padding: 10px 24px;
+        border-radius: 7px;
+        font-size: 1rem;
+        cursor: pointer;
+        text-decoration: none;
+        text-align: center;
+        flex: 1;
+        font-weight: bold;
+      }
+
+      .btn-cancel:hover {
+        background-color: #bbb;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Header -->
+    <header class="navbar">
+      <image src="/Search.png" height="75"></image>
+      <nav>
+        <a href="/main/{{username}}">Back to main</a>
+      </nav>
+    </header>
+
+    <br><br>
+
+    <!-- Main Content -->
+    <main class="login">
+      <div class="edit-card">
+        <h2>Edit Product</h2>
+
+        <form id="editProductForm" enctype="multipart/form-data">
+
+          <label for="name">Product Name</label>
+          <input type="text" id="name" name="name" value="{{product.name}}" required>
+
+          <label for="price">Price (₱)</label>
+          <input type="number" id="price" name="price" value="{{product.price}}" step="0.01" min="0.01" required>
+
+          <label for="category">Category</label>
+          <input type="text" id="category" name="category" value="{{product.category}}" required>
+
+          <label for="stock">Stock</label>
+          <input type="number" id="stock" name="stock" value="{{product.stock}}" min="0" required>
+
+          <label for="description">Description</label>
+          <textarea id="description" name="description" rows="3" required>{{product.description}}</textarea>
+
+          <label>Product Image</label>
           {{#if product.image}}
-            <div class="mb-2">
-              <img src="/{{product.image}}" alt="{{product.name}}" style="max-width: 200px; max-height: 200px; object-fit: cover; border: 1px solid #ddd; padding: 5px;">
-            </div>
+            <span class="current-image-label">Current image:</span>
+            <img src="/{{product.image}}" alt="{{product.name}}" class="current-image-preview">
           {{/if}}
-          <input type="file" class="form-control" id="image" name="image" accept="image/*">
-          <small class="text-muted">Leave empty to keep current image</small>
-        </div>
 
-        <button type="submit" class="btn btn-primary">Update Product</button>
-        <a href="/main/{{username}}" class="btn btn-secondary">Cancel</a>
-      </form>
-    </div>
-  </div>
-</div>
+          <label for="image">Upload New Image <span class="current-image-label" style="display:inline;">(leave empty to keep current)</span></label>
+          <input type="file" id="image" name="image" accept="image/*" onchange="previewNewImage(this)">
 
-<script>
-document.getElementById('editProductForm').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  
-  const formData = new FormData(e.target);
-  formData.append('username', '{{username}}');
-  
-  try {
-    const response = await fetch('/products/{{product._id}}/edit', {
-      method: 'POST',
-      body: formData
-    });
-    
-    const data = await response.json();
-    if (data.success) {
-      alert('Product updated successfully');
-      window.location.href = '/main/{{username}}';
-    } else {
-      alert('Error: ' + data.error);
-    }
-  } catch (err) {
-    alert('Error: ' + err.message);
-  }
-});
-</script>
+          <!-- Preview of newly selected image -->
+          <div id="new-image-preview-container">
+            <span class="current-image-label">New image preview:</span>
+            <img id="new-image-preview" src="" alt="New Image Preview">
+          </div>
+
+          <div class="btn-row">
+            <button type="submit" class="btn-update">Update Product</button>
+            <a href="/main/{{username}}" class="btn-cancel">Cancel</a>
+          </div>
+        </form>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p>CCAPDEV S12 Team Gardenia</p>
+    </footer>
+
+    <script>
+      // Preview newly chosen image before submitting
+      function previewNewImage(input) {
+        const container = document.getElementById('new-image-preview-container');
+        const preview = document.getElementById('new-image-preview');
+
+        if (input.files && input.files[0]) {
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            preview.src = e.target.result;
+            container.style.display = 'flex';
+          };
+          reader.readAsDataURL(input.files[0]);
+        } else {
+          preview.src = '';
+          container.style.display = 'none';
+        }
+      }
+
+      // Submit via fetch (matches the POST JSON response from products.js)
+      document.getElementById('editProductForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const formData = new FormData(e.target);
+        formData.append('username', '{{username}}');
+
+        try {
+          const response = await fetch('/products/{{product._id}}/edit', {
+            method: 'POST',
+            body: formData
+          });
+
+          const data = await response.json();
+          if (data.success) {
+            alert('Product updated successfully!');
+            window.location.href = '/main/{{username}}';
+          } else {
+            alert('Error: ' + data.error);
+          }
+        } catch (err) {
+          alert('Error: ' + err.message);
+        }
+      });
+    </script>
+  </body>
+</html>

@@ -16,7 +16,8 @@ router.get('/main/:username', async (req, res) => {
     res.render('index', { 
       products, 
       username: req.params.username,
-      isAdmin: user.type === 'admin'
+      canAddProduct: (user.type === 'admin' || user.type === 'manager'),
+      isAdmin: (user.type === 'admin')
     });
   } catch (err) {
     res.status(500).send(err.message);

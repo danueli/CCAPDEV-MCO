@@ -16,7 +16,7 @@
         <a href="/help">Help</a>
         <a href="/logout">Logout</a>
         <a href="/profile/{{username}}">Profile</a>
-        {{#if isAdmin}}
+        {{#if canAddProduct}}
           <a href="/products/add?username={{username}}">Add Product</a>
         {{/if}}
         <a href="/cart/{{username}}">
@@ -62,7 +62,7 @@
           </form>
 
           <!-- Manager Edit/Delete buttons -->
-          {{#if ../isAdmin}}
+          {{#if ../canAddProduct}}
             <div style="display: flex; gap: 5px; margin-top: 10px;">
               <a href="/products/{{this._id}}/edit?username={{../username}}" class="btn btn-sm btn-warning" style="flex: 1; padding: 8px; text-align: center; background-color: #ff9800; color: white; border-radius: 5px; text-decoration: none;">Edit</a>
               <button onclick="deleteProduct('{{this._id}}', '{{../username}}')" class="btn btn-sm btn-danger" style="flex: 1; padding: 8px; background-color: #f44336; color: white; border: none; border-radius: 5px; cursor: pointer;">Delete</button>

@@ -8,6 +8,14 @@ router.get('/login', (req, res) => {
   res.render('login');
 });
 
+router.get('/help', (req, res) => {
+  res.render('help');
+});
+
+router.get('/about', (req, res) => {
+  res.render('about');
+});
+
 // POST /login - handle login form submission
 router.post('/login', async (req, res) => {
   try {
@@ -26,11 +34,6 @@ router.post('/login', async (req, res) => {
     req.session.userId   = user._id;
     req.session.username = user.username;
     req.session.role     = user.type;
-
-    // Redirect based on user type
-    if (user.type === 'admin') {
-      return res.redirect('/admin');
-    }
 
     res.redirect(`/main/${user.username}`);
 

@@ -9,7 +9,7 @@
         <a href="/help">Help</a>
         <a href="/logout">Logout</a>
         <a href="/profile/{{username}}">Profile</a>
-        {{#if isAdmin}}
+        {{#if canAddProduct}}
           <a href="/products/add?username={{username}}">Add Product</a>
         {{/if}}
         <a href="/cart/{{username}}">

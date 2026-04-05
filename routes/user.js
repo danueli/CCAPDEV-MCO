@@ -40,17 +40,17 @@ router.post('/signup', async (req, res) => {
     }
 });
 
-// (admin login page)
+// (store manager login page)
 router.get('/s_login', (req, res) => {
     res.render('s_login');
 });
 
-// (admin signup page)
+// (store manager signup page)
 router.get('/s_signup', (req, res) => {
     res.render('s_signup');
 });
 
-// (create new admin)
+// (create new store manager)
 router.post('/s_signup', async (req, res) => {
     try {
         const { firstName, lastName, username, email, phone, password } = req.body;
@@ -68,7 +68,7 @@ router.post('/s_signup', async (req, res) => {
             email,
             phone,
             password: await bcrypt.hash(password, 10),
-            type: 'admin'
+            type: 'manager'
         });
 
         await newUser.save();

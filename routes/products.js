@@ -35,17 +35,17 @@ router.get('/', async (req, res) => {
     const products = await Product.find().lean();
 
     const username = req.query.username;
-    let isManager = false;
+    let canAddProduct = false;
     if (username) {
       const User = require('../models/User');
       const user = await User.findOne({ username }).lean();
-      isManager = user && user.type === 'manager';
+      canAddProduct = user && (user.type === 'admin' || user.type === 'manager');
     }
 
-    res.render('products', { 
-      products, 
+    res.render('products', {
+      products,
       username,
-      isAdmin
+      canAddProduct
     });
   } catch (err) {
     res.status(500).send(err.message);
@@ -88,11 +88,11 @@ router.get('/:id', async (req, res) => {
     }
 
     const username = req.query.username;
-    let isManager = false;
+    let canAddProduct = false;
     if (username) {
       const User = require('../models/User');
       const user = await User.findOne({ username }).lean();
-      isManager = user && user.type === 'manager';
+      canAddProduct = user && (user.type === 'admin' || user.type === 'manager');
     }
 
     res.render('product-detail', {
@@ -101,7 +101,7 @@ router.get('/:id', async (req, res) => {
       avgRating,
       reviewCount: reviews.length,
       username,
-      isAdmin
+      canAddProduct
     });
   } catch (err) {
     res.status(500).send(err.message);
@@ -184,7 +184,7 @@ router.post('/:productId/review/:reviewId/delete', async (req, res) => {
   }
 });
 
-// GET /products/:id/edit — show edit product form (manager only)
+// GET /products/:id/edit — show edit product form (admin only)
 router.get('/:id/edit', async (req, res) => {
   try {
     const product = await Product.findById(req.params.id).lean();
@@ -193,7 +193,7 @@ router.get('/:id/edit', async (req, res) => {
     const username = req.query.username;
     const User = require('../models/User');
     const user = await User.findOne({ username }).lean();
-    
+
     if (!user || user.type !== 'admin') {
       return res.status(403).send('Unauthorized: Only admins can edit products');
     }
@@ -204,11 +204,11 @@ router.get('/:id/edit', async (req, res) => {
   }
 });
 
-// POST /products/:id/edit — update product
+// POST /products/:id/edit — update product (admin only)
 router.post('/:id/edit', upload.single('image'), async (req, res) => {
   try {
     const { name, price, category, stock, description, username } = req.body;
-    
+
     const User = require('../models/User');
     const user = await User.findOne({ username }).lean();
     if (!user || user.type !== 'admin') {
@@ -221,18 +221,18 @@ router.post('/:id/edit', upload.single('image'), async (req, res) => {
     }
 
     const updatedProduct = await Product.findByIdAndUpdate(req.params.id, updateData, { new: true });
-    
+
     res.json({ success: true, message: 'Product updated successfully', product: updatedProduct });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
   }
 });
 
-// POST /products/:id/delete — delete product (manager only)
+// POST /products/:id/delete — delete product (admin only)
 router.post('/:id/delete', async (req, res) => {
   try {
     const { username } = req.body;
-    
+
     const User = require('../models/User');
     const user = await User.findOne({ username }).lean();
     if (!user || user.type !== 'admin') {
@@ -248,7 +248,7 @@ router.post('/:id/delete', async (req, res) => {
     );
 
     await Product.findByIdAndDelete(req.params.id);
-    
+
     res.json({ success: true, message: 'Product deleted successfully' });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });

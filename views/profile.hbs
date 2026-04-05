@@ -7,8 +7,11 @@
     <a href="/help">Help</a>
     <a href="/logout">Logout</a>
     <a href ="/about">About Us</a>
+    {{#if canAddProduct}}
+      <a href="/products/add-product?username={{username}}">Add Product</a>
+    {{/if}}
     {{#if isAdmin}}
-      <a href="/products/add?username={{username}}">Add Product</a>
+      <a href="/admin/adminbaker">Admin Dashboard</a>
     {{/if}}
     <a href="/cart/{{username}}">
       <img src="/cart-icon.png" alt="Cart" height="40">
@@ -126,7 +129,11 @@
                         <div style="display: flex; gap: 10px; margin-bottom: 20px;">
                             <a href="/orders/{{username}}" class="btn btn-info" style="padding: 10px 20px; text-decoration: none; background-color: #4CAF50; color: white; border-radius: 5px;">View My Orders</a>
                         </div>
-                        <button onclick="deleteAccount('{{username}}')" class="btn-danger" style="padding: 10px 20px; background-color: #f44336; color: white; border: none; border-radius: 5px; cursor: pointer;">Delete Account</button>
+                        {{#if isAdmin}}
+                          <button class="btn-danger" disabled title="Admin accounts cannot be deleted" style="padding: 10px 20px; background-color: #aaa; color: white; border: none; border-radius: 5px; cursor: not-allowed; opacity: 0.6;">Delete Account</button>
+                        {{else}}
+                          <button onclick="deleteAccount('{{username}}')" class="btn-danger" style="padding: 10px 20px; background-color: #f44336; color: white; border: none; border-radius: 5px; cursor: pointer;">Delete Account</button>
+                        {{/if}}
                     </div>
                 </div>
             </div>

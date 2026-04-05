@@ -1,87 +1,119 @@
+<!-- Header -->
+<header class="navbar">
+  <image src="/Search.png" height="75"></image>
+  <nav>
+    <a href="/main/adminbaker">Home</a>
+    <a href="/catalog/adminbaker">Catalog</a>
+    <a href="/help">Help</a>
+    <a href="/logout">Logout</a>
+    <a href="/about">About Us</a>
+    <a href="/products/add-product?username=adminbaker">Add Product</a>
+    <a href="/profile/adminbaker">Profile</a>
+    <a href="/cart/adminbaker">
+    <img src="/cart-icon.png" alt="Cart" height="40">
+    </a>
+  </nav>
+</header>
+
 <main class="main-content">
-    <!-- Admin Profile -->
-    <div class="profile-wrapper">
+  <div class="profile-wrapper">
 
-        <div class="profile-hero">
-            <div class="profile-avatar">A</div>
-
-            <div class="profile-hero-info">
-                <h1>Admin Dashboard</h1>
-                <span class="role-badge">Administrator</span>
-            </div>
-        </div>
-
-        <!-- Dashboard Cards -->
-        <div style="
-            display:grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap:24px;
-            margin-top:24px;
-        ">
-
-            <!-- List of Users -->
-            <div class="profile-card">
-                <h3>All Users</h3>
-                <div id="users-list">
-                    {{#if users}}
-                        {{#each users}}
-                            <div class="info-row">
-                                <span class="info-label">{{username}}</span>
-                                <span class="info-value">{{firstName}} {{lastName}}</span>
-                            </div>
-                        {{/each}}
-                    {{else}}
-                        <div class="info-row">
-                            <span class="info-value">No users found</span>
-                        </div>
-                    {{/if}}
-                </div>
-            </div>
-
-            <!-- List of Managers/Sellers Box -->
-            <div class="profile-card">
-                <h3>All Managers</h3>
-                <div id="managers-list">
-                    {{#if managers}}
-                        {{#each managers}}
-                            <div class="info-row">
-                                <span class="info-label">{{username}}</span>
-                                <span class="info-value">{{firstName}} {{lastName}}</span>
-                            </div>
-                        {{/each}}
-                    {{else}}
-                        <div class="info-row">
-                            <span class="info-value">No managers found</span>
-                        </div>
-                    {{/if}}
-                </div>
-            </div>
-
-            <!-- Statistics -->
-            <div class="profile-card">
-                <h3>Statistics</h3>
-
-                <div class="info-row">
-                    <span class="info-label">Total Users</span>
-                    <span class="info-value" id="total-users">{{totalUsers}}</span>
-                </div>
-
-                <div class="info-row">
-                    <span class="info-label">Total Managers</span>
-                    <span class="info-value" id="total-managers">{{totalManagers}}</span>
-                </div>
-
-                <div class="info-row">
-                    <span class="info-label">Total Products</span>
-                    <span class="info-value" id="total-products">{{totalProducts}}</span>
-                </div>
-            </div>
-        </div>
-
+    <!-- Hero Banner -->
+    <div class="profile-hero">
+      <div class="profile-avatar">A</div>
+      <div class="profile-hero-info">
+        <h1>Admin Dashboard</h1>
+        <span class="role-badge">Administrator</span>
+      </div>
     </div>
+
+    <!-- Tabs -->
+    <div class="profile-tabs" id="profile-tabs">
+      <button class="tab-btn active" data-tab="users">All Users</button>
+      <button class="tab-btn" data-tab="managers">All Managers</button>
+      <button class="tab-btn" data-tab="statistics">Statistics</button>
+    </div>
+
+    <!-- Users Tab -->
+    <div class="tab-panel active" id="tab-users">
+      <div class="profile-card">
+        <h3>All Users</h3>
+        {{#if users}}
+          {{#each users}}
+            <div class="info-row">
+              <span class="info-label">{{username}}</span>
+              <span class="info-value">{{firstName}} {{lastName}}</span>
+            </div>
+          {{/each}}
+        {{else}}
+          <div class="info-row">
+            <span class="info-value">No users found</span>
+          </div>
+        {{/if}}
+      </div>
+    </div>
+
+    <!-- Managers Tab -->
+    <div class="tab-panel" id="tab-managers">
+      <div class="profile-card">
+        <h3>All Managers</h3>
+        {{#if managers}}
+          {{#each managers}}
+            <div class="info-row">
+              <span class="info-label">{{username}}</span>
+              <span class="info-value">{{firstName}} {{lastName}}</span>
+            </div>
+          {{/each}}
+        {{else}}
+          <div class="info-row">
+            <span class="info-value">No managers found</span>
+          </div>
+        {{/if}}
+      </div>
+    </div>
+
+    <!-- Statistics Tab -->
+    <div class="tab-panel" id="tab-statistics">
+      <div class="profile-card">
+        <h3>Statistics</h3>
+        <div class="info-row">
+          <span class="info-label">Total Users</span>
+          <span class="info-value" id="total-users">{{totalUsers}}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Total Managers</span>
+          <span class="info-value" id="total-managers">{{totalManagers}}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Total Products</span>
+          <span class="info-value" id="total-products">{{totalProducts}}</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
 </main>
 
 <!-- Footer -->
 <footer class="footer">
-    <p>CCAPDEV S12 Team Gardenia</p>
+  <p>CCAPDEV S12 Team Gardenia</p>
 </footer>
+
+<script>
+  // Tab switching functionality
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const tabName = e.target.dataset.tab;
+
+      // Remove active class from all buttons
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      e.target.classList.add('active');
+
+      // Hide all panels
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+
+      // Show selected panel
+      document.getElementById(`tab-${tabName}`).classList.add('active');
+    });
+  });
+</script>
