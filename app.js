@@ -7,7 +7,7 @@ const app = express();
 
 // Env fallback with defaults
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/bakehub';
-const SESSION_SECRET = process.env.SESSION_SECRET || 'change_me_in_production';
+const SESSION_SECRET = process.env.SESSION_SECRET || 'supersecretpassword123';
 const PORT = parseInt(process.env.PORT, 10) || 3000;
 
 // MongoDB connection
