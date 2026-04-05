@@ -78,5 +78,5 @@ app.use('/',         requireLogin, require('./routes/about'));
 
 // Start server
 app.listen(PORT, () => {
-  console.log(`Running on http://localhost:${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
